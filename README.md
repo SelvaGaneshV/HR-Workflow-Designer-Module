@@ -54,7 +54,7 @@ Each documented with:
 ---
 
 ## 🗺️ Workflow Canvas Features
-- [ ] Drag-and-drop from sidebar  
+- [*] Drag-and-drop from sidebar  
 - [ ] Add / remove nodes  
 - [ ] Connect edges  
 - [ ] Node selection → edit panel  
