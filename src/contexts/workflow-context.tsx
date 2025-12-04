@@ -1,18 +1,22 @@
 import type { WorkflowContextType } from "@/types/workflow";
+import type { Node } from "@xyflow/react";
 import React from "react";
 
 const WorkflowContext = React.createContext<WorkflowContextType | null>(null);
 
-export function WorkflowProvider({
+export const WorkflowProvider: React.FC<React.PropsWithChildren> = ({
   children,
-}: React.PropsWithChildren): React.JSX.Element {
+}) => {
   const [dragData, setDragData] = React.useState<string | null>(null);
+  const [selectedNode, setSelectedNode] = React.useState<Node | null>(null);
   return (
-    <WorkflowContext.Provider value={{ dragData, setDragData }}>
+    <WorkflowContext.Provider
+      value={{ dragData, setDragData, selectedNode, setSelectedNode }}
+    >
       {children}
     </WorkflowContext.Provider>
   );
-}
+};
 
 export function useWorkflow(): WorkflowContextType {
   const context = React.useContext(WorkflowContext);

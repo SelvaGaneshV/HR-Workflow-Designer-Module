@@ -1,18 +1,13 @@
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import type { NodeProps } from "@xyflow/react";
-import { Play } from "lucide-react";
+import { Stamp } from "lucide-react";
 import React from "react";
 
-const StartNode: React.FC<NodeProps> = ({ data }) => {
+const ApprovalNode:React.FC<NodeProps> = ({ data }) => {
   return (
     <Card className="cursor-grab active:cursor-grabbing min-w-30 max-h-12 hover:bg-sidebar-accent rounded-md transition-colors py-2">
       <CardHeader className="flex items-center gap-3">
-        <Play className="size-5 text-muted-foreground" />
+        <Stamp className="size-5 text-muted-foreground" />
         <div>
           <CardTitle className="text-sm font-medium" title="">
             {(data?.label ? data?.label : "Start") as React.ReactNode}
@@ -26,4 +21,4 @@ const StartNode: React.FC<NodeProps> = ({ data }) => {
   );
 };
 
-export default StartNode;
+export default ApprovalNode;

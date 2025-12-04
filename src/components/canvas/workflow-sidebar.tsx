@@ -38,7 +38,7 @@ const NODE_TYPES = [
     description: "Manager or HR approval step",
   },
   {
-    type: "automated",
+    type: "automatedStep",
     label: "Automated Step",
     icon: Bot,
     description: "System-triggered automation (email, docs)",
