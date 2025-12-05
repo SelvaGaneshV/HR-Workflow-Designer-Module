@@ -12,9 +12,9 @@ Use this checklist to ensure your README includes all required sections for the 
 ---
 
 ## 🔧 Tech Stack
-- [ ] React (Vite or Next.js)  
-- [ ] React Flow  
-- [ ] TypeScript  
+- [x] React (Vite or Next.js)  
+- [x] React Flow  
+- [x] TypeScript  
 - [ ] Mock API layer (JSON Server / MSW / local mocks)  
 - [ ] State management (if used)
 
@@ -33,11 +33,11 @@ Use this checklist to ensure your README includes all required sections for the 
 ---
 
 ## 🧩 Node Types Implemented
-- [ ] Start Node  
-- [ ] Task Node  
-- [ ] Approval Node  
-- [ ] Automated Step Node  
-- [ ] End Node  
+- [x] Start Node  
+- [x] Task Node  
+- [x] Approval Node  
+- [x] Automated Step Node  
+- [x] End Node  
 
 Each documented with:
 - [ ] Purpose  
@@ -55,9 +55,9 @@ Each documented with:
 
 ## 🗺️ Workflow Canvas Features
 - [x] Drag-and-drop from sidebar  
-- [ ] Add / remove nodes  
+- [x] Add / remove nodes  
 - [ ] Connect edges  
-- [ ] Node selection → edit panel  
+- [x] Node selection → edit panel  
 - [ ] Basic constraints (Start node first, etc.)  
 
 ---

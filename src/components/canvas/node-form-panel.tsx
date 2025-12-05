@@ -17,9 +17,20 @@ const NodeFormPanel = () => {
   return (
     <Panel
       position="top-right"
-      className="bg-sidebar h-[97%] w-xs rounded-md border border-sidebar-border"
+      className="bg-sidebar flex flex-col items-center justify-start h-[97%] w-xs rounded-md border border-sidebar-border"
     >
-      <RenderForm type={selectedNode?.type} />
+      <div className="flex items-center justify-center border-b border-sidebar-border px-3 py-2">
+        <span className="text-xl font-medium text-center text-muted-foreground">
+          {
+            (selectedNode?.data?.label
+              ? selectedNode?.data?.label
+              : "Start") as React.ReactNode
+          }
+        </span>
+      </div>
+      <div className="flex-1 w-full h-full p-3">
+        <RenderForm type={selectedNode?.type} />
+      </div>
     </Panel>
   );
 };

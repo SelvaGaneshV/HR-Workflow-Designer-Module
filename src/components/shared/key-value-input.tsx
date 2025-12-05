@@ -38,6 +38,7 @@ import {
   FieldSet,
 } from "../ui/field";
 import { Textarea } from "../ui/textarea";
+import { ScrollArea } from "../ui/scroll-area";
 
 export type KVType = "string" | "number" | "boolean" | "object" | "array";
 
@@ -120,117 +121,122 @@ const KeyValueInput: React.FC<Props> = ({ value = [], onChange }) => {
   };
 
   return (
-    <div className="space-y-3">
+    <div className=" flex flex-col w-full gap-2.5">
       <Button className="self-end" onClick={addRow}>
         <Plus className="w-4 h-4 mr-2" />
         Add Field
       </Button>
-      {rows.map((row, i) => {
-        const keyError = haskeyError(row.key, i);
 
-        const valueError = hasValueError(row.value, row.type);
+      <div className=" flex flex-col gap-2.5">
+        {rows.map((row, i) => {
+          const keyError = haskeyError(row.key, i);
 
-        return (
-          <FieldGroup className="bg-background p-3 rounded-md shadow-2xs gap-2.5">
-            <FieldSet className="">
-              <Field orientation={"vertical"}>
-                <FieldLabel>Key</FieldLabel>
-                <InputGroup>
-                  <InputGroupInput
-                    value={row.key}
-                    placeholder="enter key"
-                    onChange={(e) => updateField(i, "key", e.target.value)}
-                  />
+          const valueError = hasValueError(row.value, row.type);
 
-                  <InputGroupAddon align="inline-end">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <InputGroupButton
-                          variant="ghost"
-                          className="pr-1.5! text-xs text-center"
-                        >
-                          {row.type || "type"}{" "}
-                          <ChevronDownIcon className="size-3" />
-                        </InputGroupButton>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="rounded-md">
-                        <DropdownMenuRadioGroup
-                          value={row.type}
-                          onValueChange={(val) =>
-                            updateField(i, "type", val as KVType)
-                          }
-                        >
-                          <DropdownMenuRadioItem value="string">
-                            String
-                          </DropdownMenuRadioItem>
-                          <DropdownMenuRadioItem value="number">
-                            Number
-                          </DropdownMenuRadioItem>
-                          <DropdownMenuRadioItem value="boolean">
-                            Boolean
-                          </DropdownMenuRadioItem>
-                          <DropdownMenuRadioItem value="object">
-                            Object
-                          </DropdownMenuRadioItem>
-                          <DropdownMenuRadioItem value="array">
-                            Array
-                          </DropdownMenuRadioItem>
-                        </DropdownMenuRadioGroup>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+          return (
+            <FieldGroup className="bg-background p-3 rounded-md shadow-2xs gap-2.5">
+              <FieldSet className="">
+                <Field orientation={"vertical"}>
+                  <FieldLabel>Key</FieldLabel>
+                  <InputGroup>
+                    <InputGroupInput
+                      value={row.key}
+                      placeholder="enter key"
+                      onChange={(e) => updateField(i, "key", e.target.value)}
+                    />
 
-                    <InputGroupButton
-                      variant="ghost"
-                      size="icon-sm"
-                      onClick={() => removeRow(i)}
+                    <InputGroupAddon align="inline-end">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <InputGroupButton
+                            variant="ghost"
+                            className="pr-1.5! text-xs text-center"
+                          >
+                            {row.type || "type"}{" "}
+                            <ChevronDownIcon className="size-3" />
+                          </InputGroupButton>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="rounded-md">
+                          <DropdownMenuRadioGroup
+                            value={row.type}
+                            onValueChange={(val) =>
+                              updateField(i, "type", val as KVType)
+                            }
+                          >
+                            <DropdownMenuRadioItem value="string">
+                              String
+                            </DropdownMenuRadioItem>
+                            <DropdownMenuRadioItem value="number">
+                              Number
+                            </DropdownMenuRadioItem>
+                            <DropdownMenuRadioItem value="boolean">
+                              Boolean
+                            </DropdownMenuRadioItem>
+                            <DropdownMenuRadioItem value="object">
+                              Object
+                            </DropdownMenuRadioItem>
+                            <DropdownMenuRadioItem value="array">
+                              Array
+                            </DropdownMenuRadioItem>
+                          </DropdownMenuRadioGroup>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+
+                      <InputGroupButton
+                        variant="ghost"
+                        size="icon-sm"
+                        onClick={() => removeRow(i)}
+                      >
+                        <Trash2 className="w-4 h-4 text-red-500" />
+                      </InputGroupButton>
+                    </InputGroupAddon>
+                  </InputGroup>
+                  <FieldError>{keyError}</FieldError>
+                </Field>
+              </FieldSet>
+              <FieldSet>
+                <Field orientation={"vertical"}>
+                  <FieldLabel>Value</FieldLabel>
+                  {row.type === "boolean" ? (
+                    <Select
+                      value={String(row.value)}
+                      onValueChange={(v) =>
+                        updateField(i, "value", v === "true")
+                      }
                     >
-                      <Trash2 className="w-4 h-4 text-red-500" />
-                    </InputGroupButton>
-                  </InputGroupAddon>
-                </InputGroup>
-                <FieldError>{keyError}</FieldError>
-              </Field>
-            </FieldSet>
-            <FieldSet>
-              <Field orientation={"vertical"}>
-                <FieldLabel>Value</FieldLabel>
-                {row.type === "boolean" ? (
-                  <Select
-                    value={String(row.value)}
-                    onValueChange={(v) => updateField(i, "value", v === "true")}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="true">true</SelectItem>
-                      <SelectItem value="false">false</SelectItem>
-                    </SelectContent>
-                  </Select>
-                ) : row.type === "object" || row.type === "array" ? (
-                  <Textarea
-                    value={row.value}
-                    onChange={(e) => {
-                      try {
-                        updateField(i, "value", e.target.value);
-                      } catch (e) {}
-                    }}
-                    className="text-xs text-muted-foreground mt-2"
-                  />
-                ) : (
-                  <Input
-                    value={row.value}
-                    type={row.type === "number" ? "number" : "text"}
-                    placeholder="value"
-                    onChange={(e) => updateField(i, "value", e.target.value)}
-                  />
-                )}
-                <FieldError>{valueError}</FieldError>
-              </Field>
-            </FieldSet>
-          </FieldGroup>
-        );
-      })}
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="true">true</SelectItem>
+                        <SelectItem value="false">false</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  ) : row.type === "object" || row.type === "array" ? (
+                    <Textarea
+                      value={row.value}
+                      onChange={(e) => {
+                        try {
+                          updateField(i, "value", e.target.value);
+                        } catch (e) {}
+                      }}
+                      className="text-xs text-muted-foreground mt-2"
+                    />
+                  ) : (
+                    <Input
+                      value={row.value}
+                      type={row.type === "number" ? "number" : "text"}
+                      placeholder="value"
+                      onChange={(e) => updateField(i, "value", e.target.value)}
+                    />
+                  )}
+                  <FieldError>{valueError}</FieldError>
+                </Field>
+              </FieldSet>
+            </FieldGroup>
+          );
+        })}
+      </div>
     </div>
   );
 };
