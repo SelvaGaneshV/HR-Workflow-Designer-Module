@@ -12,11 +12,11 @@ const TaskNodeForm = () => {
     updateNodeData(selectedNode!.id, data);
   };
   const onChangeKeyValue = (value: KeyValuePair[]) => {
-    console.log(value);
+    onNodeDataChange({ customFields: value });
   };
 
   return (
-    <div className="flex flex-col items-center justify-start gap-2.5">
+    <div className="flex flex-col h-full items-center justify-start gap-2.5">
       <NodeInput
         onChange={(value) => {
           onNodeDataChange({
@@ -35,7 +35,7 @@ const TaskNodeForm = () => {
           });
         }}
         validate={(value) => (!value ? "Required" : null)}
-        type="text"
+        type="textarea"
         label="Description"
         value={selectedNode?.data?.description}
       />
@@ -61,9 +61,7 @@ const TaskNodeForm = () => {
         label="Due Date"
         value={selectedNode?.data?.dueDate}
       />
-      <ScrollArea className="w-full h-[520px]">
-        <KeyValueInput onChange={onChangeKeyValue} />
-      </ScrollArea>
+      <KeyValueInput onChange={onChangeKeyValue} />
     </div>
   );
 };

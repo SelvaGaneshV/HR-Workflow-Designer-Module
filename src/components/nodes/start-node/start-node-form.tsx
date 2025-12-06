@@ -15,11 +15,11 @@ const StarNodeForm = () => {
     updateNodeData(selectedNode!.id, data);
   };
   const onChangeKeyValue = (value: KeyValuePair[]) => {
-    console.log(value);
+    onNodeDataChange({ customFields: value });
   };
 
   return (
-    <div className="flex flex-col items-center justify-start gap-2.5">
+    <div className="flex flex-col h-full items-center justify-start gap-2.5">
       <NodeInput
         onChange={(value) => {
           onNodeDataChange({
@@ -31,9 +31,11 @@ const StarNodeForm = () => {
         label="Title"
         value={selectedNode?.data?.title}
       />
-      <ScrollArea className="w-full h-[750px]">
-        <KeyValueInput onChange={onChangeKeyValue} />
-      </ScrollArea>
+
+      <KeyValueInput
+        value={(selectedNode?.data?.customFields as KeyValuePair[]) || []}
+        onChange={onChangeKeyValue}
+      />
     </div>
   );
 };

@@ -19,18 +19,18 @@ const EndNodeForm = () => {
     updateNodeData(selectedNode!.id, data);
   };
   const onChangeKeyValue = (value: KeyValuePair[]) => {
-    console.log(value);
+    onNodeDataChange({ customFields: value });
   };
 
   return (
-    <div className="flex flex-col h-full items-center overflow-hidden justify-start gap-2.5">
+    <div className="flex flex-col  h-full items-center  justify-start gap-2.5">
       <NodeInput
         onChange={(value) => {
           onNodeDataChange({
             message: value,
           });
         }}
-        type="textArea"
+        type="textarea"
         label="Message"
         value={selectedNode?.data?.message}
       />
@@ -43,11 +43,11 @@ const EndNodeForm = () => {
         }}
         type="checkbox"
         label="Summary flag"
+        orientation="horizontal"
         value={selectedNode?.data?.summaryFlag}
       />
-      <ScrollArea className="w-full flex-1 h-[680px]">
-        <KeyValueInput onChange={onChangeKeyValue} />
-      </ScrollArea>
+
+      <KeyValueInput onChange={onChangeKeyValue} />
     </div>
   );
 };

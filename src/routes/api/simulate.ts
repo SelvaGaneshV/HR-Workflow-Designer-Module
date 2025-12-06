@@ -1,6 +1,7 @@
 import type { WorkflowJson } from "@/types/workflow";
 import { createFileRoute } from "@tanstack/react-router";
-import type { Edge, Node } from "@xyflow/react";
+import { json } from "@tanstack/react-start";
+import type { Node } from "@xyflow/react";
 
 export const Route = createFileRoute("/api/simulate")({
   server: {
@@ -9,79 +10,131 @@ export const Route = createFileRoute("/api/simulate")({
         const workflow: WorkflowJson = await request.json();
 
         const { nodes, edges } = workflow;
-        const log: string[] = [];
+        let logs: Record<string, { type: string; message: string }[]> = {};
+        let log: { type: string; message: string }[] = [];
+        const paths: string[][] = [];
 
-        // 1) Find start node
-        const start = nodes.find((n: Node) => n.type === "start");
+        const findNode = (id: string) => nodes.find((n) => n.id === id);
+        const outgoingTargets = (id: string) =>
+          edges.filter((e) => e.source === id).map((e) => e.target);
+
+        const start = nodes.find((n) => n.type === "start");
         if (!start) {
-          return new Response(
-            JSON.stringify({
+          return json(
+            {
               status: "error",
-              log: ["No Start Node found"],
-            }),
+              logs: {
+                error: [
+                  {
+                    type: "error",
+                    message: "No start node found in workflow.",
+                  },
+                ],
+              },
+              paths: [],
+            },
             { status: 400 }
           );
         }
 
-        log.push("Starting workflow simulation…");
-        log.push(`Start node: ${start.id}`);
+        log.push({ type: "info", message: `Starting workflow simulation…` });
+        log.push({ type: "info", message: `Start node detected: ${start.id}` });
 
-        // Utility to find outgoing edges
-        const getNextNodes = (nodeId: string) => {
-          const outgoing = edges.filter((e: Edge) => e.source === nodeId);
-          return outgoing
-            .map((e: Edge) => nodes.find((n: Node) => n.id === e.target))
-            .filter(Boolean);
+        /**
+         * Recursively traverse the workflow graph starting from a given node.
+         * This function is used to simulate the workflow and detect cycles.
+         *
+         * @param {Object} options - Object containing the following properties:
+         * @param {Node} options.node - The current node being processed.
+         * @param {Set<string>} options.visited - Set of node IDs that have been visited.
+         * @param {string[]} options.path - The current path being traversed.
+         * @param {{type: string, message: string}[]} options.log - Array of log messages.
+         * @param {string} options.startId - The ID of the start node for this branch.
+         */
+        const findFlow = ({
+          node,
+          visited,
+          path,
+          log,
+          startId,
+        }: {
+          node: Node;
+          visited: Set<string>;
+          path: string[];
+          log: { type: string; message: string }[];
+          startId: string;
+        }) => {
+          if (!node) return;
+
+          log.push({
+            type: "info",
+            message: `Processing: ${node.type} (${node.id})`,
+          });
+
+          if (visited.has(node.id)) {
+            log.push({
+              type: "error",
+              message: `Cycle detected at node ${node.id}. Ending this branch.`,
+            });
+            logs[startId] = structuredClone(log);
+            return;
+          }
+
+          const newVisited = new Set(visited);
+          newVisited.add(node.id);
+
+          const newPath = [...path, node.id];
+
+          const targets = outgoingTargets(node.id);
+
+          if (node.type === "end") {
+            log.push({
+              type: "success",
+              message: `End reached: path completed.`,
+            });
+            paths.push(newPath);
+            logs[startId] = structuredClone(log);
+            return;
+          }
+          if (targets.length === 0) {
+            log.push({
+              type: "error",
+              message: `Dead-end at ${node.id}. Path terminated.`,
+            });
+            logs[startId] = structuredClone(log);
+            paths.push(newPath);
+            return;
+          }
+          const hasMultipleTargets = targets.length > 1;
+
+          for (let i = 0; i < targets.length; i++) {
+            const currentLog = structuredClone(log);
+            const target = findNode(targets[i])!;
+
+            findFlow({
+              node: target!,
+              visited: newVisited,
+              path: newPath,
+              log: currentLog,
+              startId: hasMultipleTargets ? targets[i] : startId,
+            });
+          }
         };
 
-        const visited = new Set<string>();
-        const executionPath: any[] = [];
+        findFlow({
+          node: start,
+          visited: new Set(),
+          path: [],
+          log,
+          startId: start.id,
+        });
 
-        let currentNode = start;
-
-        // 2) Traverse using edges
-        while (currentNode) {
-          if (visited.has(currentNode.id)) {
-            log.push(`Loop detected at node ${currentNode.id}. Stopping.`);
-            break;
-          }
-
-          visited.add(currentNode.id);
-          executionPath.push(currentNode);
-
-          log.push(
-            `Processing node: ${currentNode.type} (${currentNode.id})`
-          );
-
-          if (currentNode.type === "end") {
-            log.push("End node reached. Workflow complete.");
-            break;
-          }
-
-          const next = getNextNodes(currentNode.id);
-
-          if (next.length === 0) {
-            log.push(
-              `No outgoing edges from node ${currentNode.id}. Stopping.`
-            );
-            break;
-          }
-
-          if (next.length > 1) {
-            log.push(
-              `Node ${currentNode.id} has multiple outgoing edges. Taking the first path.`
-            );
-          }
-
-          currentNode = next[0]!;
-        }
-
-        return new Response(
-          JSON.stringify({
+        return json(
+          {
             status: "success",
-            log,
-            path: executionPath.map((n) => n.id),
-          }),
+            logs,
+            paths,
+          },
           { status: 200 }
         );
       },

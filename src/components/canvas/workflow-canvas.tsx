@@ -15,12 +15,15 @@ import {
   useEdgesState,
   useNodesState,
   useReactFlow,
+  type ColorMode,
   type Connection,
   type Node,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { useCallback } from "react";
 import WorkflowToolbar from "./workflow-toolbar";
+import WorkflowControls from "./workflow-controls";
+import { useTheme } from "next-themes";
 
 const NODE_TYPES = {
   start: StartNode,
@@ -40,14 +43,15 @@ const EDGE_TYPES = {
  * This component is responsible for rendering the workflow canvas
  * where the user can create and edit nodes and edges.
  *
- * @returns {React.ReactElement} a React element representing the WorkflowCanvas component
+ * @returns a React element representing the WorkflowCanvas component
  */
 
 const WorkflowCanvas: React.FC = () => {
+  const { theme } = useTheme();
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const { screenToFlowPosition, getEdges, getNodes } = useReactFlow();
-  const { dragData, setDragData, setSelectedNode } = useWorkflow();
+  const { dragData, setDragData, setSelectedNodeId } = useWorkflow();
 
   const onConnect = useCallback(
     (params: Connection) => setEdges((eds) => addEdge(params, eds)),
@@ -107,19 +111,21 @@ const WorkflowCanvas: React.FC = () => {
     },
     [screenToFlowPosition, dragData]
   );
+
   return (
     <div className="w-full h-full">
       <ReactFlow
         nodes={nodes}
         onNodesChange={onNodesChange}
         edges={edges}
+        colorMode={theme as ColorMode}
         onConnect={onConnect}
         onDragOver={onDragOver}
         onDrop={onDrop}
         isValidConnection={isValidConnection}
         onEdgesChange={onEdgesChange}
         onPaneClick={() => {
-          setSelectedNode(null);
+          setSelectedNodeId(null);
         }}
         connectionLineType={ConnectionLineType.SmoothStep}
         edgeTypes={EDGE_TYPES}
@@ -128,6 +134,7 @@ const WorkflowCanvas: React.FC = () => {
         <Background color="#aaa" gap={16} />
         <NodeFormPanel />
         <WorkflowToolbar />
+        <WorkflowControls />
       </ReactFlow>
     </div>
   );

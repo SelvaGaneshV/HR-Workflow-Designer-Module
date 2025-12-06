@@ -5,13 +5,13 @@ import { Edit, TrashIcon } from "lucide-react";
 import React from "react";
 
 const CustomNodeToolBar: React.FC<{ id: string }> = ({ id }) => {
-  const { getNode, deleteElements } = useReactFlow();
-  const { setSelectedNode } = useWorkflow();
+  const { deleteElements } = useReactFlow();
+  const { setSelectedNodeId } = useWorkflow();
   return (
-    <NodeToolbar isVisible={undefined} position={Position.Top} align={"center"}>
+    <NodeToolbar position={Position.Top} align={"center"}>
       <Button
         onClick={() => {
-          setSelectedNode(getNode(id)!);
+          setSelectedNodeId(id);
         }}
         size={"icon-sm"}
         variant={"ghost"}

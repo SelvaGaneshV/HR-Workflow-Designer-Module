@@ -15,8 +15,8 @@ Use this checklist to ensure your README includes all required sections for the 
 - [x] React (Vite or Next.js)  
 - [x] React Flow  
 - [x] TypeScript  
-- [ ] Mock API layer (JSON Server / MSW / local mocks)  
-- [ ] State management (if used)
+- [x] Mock API layer (JSON Server / MSW / local mocks)  
+- [x] State management (if used)
 
 ---
 
@@ -47,9 +47,9 @@ Each documented with:
 
 ## 🎛️ Node Editing Panel
 - [ ] Controlled form components  
-- [ ] Dynamic, extendable form structure  
-- [ ] Validation strategy  
-- [ ] Node state and update flow
+- [x] Dynamic, extendable form structure  
+- [x] Validation strategy  
+- [x] Node state and update flow
 
 ---
 
@@ -71,10 +71,10 @@ Each documented with:
 ---
 
 ## 🧪 Workflow Test / Sandbox
-- [ ] How workflow JSON is serialized  
+- [x] How workflow JSON is serialized  
 - [x] API call to `/simulate`  
-- [ ] Rendering the step-by-step execution log  
-- [ ] Validation logic (cycles, missing links)
+- [x] Rendering the step-by-step execution log  
+- [x] Validation logic (cycles, missing links)
 
 ---
 
@@ -98,7 +98,7 @@ Each documented with:
 - [x] Export / Import workflow  
 - [ ] Node templates  
 - [ ] Undo / Redo  
-- [ ] Mini-map / Zoom controls  
+- [x] Mini-map / Zoom controls  
 - [ ] Visual validation errors  
 - [ ] Auto-layout  
 - [ ] Node version history  

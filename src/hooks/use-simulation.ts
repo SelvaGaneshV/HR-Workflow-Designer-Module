@@ -1,12 +1,17 @@
-import type { SimulationResult, WorkflowJson } from "@/types/workflow";
-import React, { useState } from "react";
+import type {
+  SimulationResult,
+  UseSimulation,
+  WorkflowJson,
+} from "@/types/workflow";
+import { useMutation } from "@tanstack/react-query";
 
-export function useSimulation() {
-  const [simulation, setSimulation] = React.useState<SimulationResult | null>(
-    null
-  );
-  const runSimulation = async (workflowJson: WorkflowJson) => {
-    try {
+export function useSimulation(): UseSimulation {
+  const {
+    data: simulation,
+    mutate: runSimulation,
+    isPending: isSimulating,
+  } = useMutation({
+    mutationFn: async (workflowJson: WorkflowJson) => {
       const res: SimulationResult = await fetch("/api/simulate", {
         method: "POST",
         headers: {
@@ -14,17 +19,13 @@ export function useSimulation() {
         },
         body: JSON.stringify(workflowJson),
       }).then((res) => res.json());
-      setSimulation(res);
-    } catch {
-      setSimulation({
-        status: "error",
-        log: ["Simulation failed."],
-      });
-    }
-  };
+      return res;
+    },
+  });
 
   return {
     simulation,
     runSimulation,
+    isSimulating,
   };
 }

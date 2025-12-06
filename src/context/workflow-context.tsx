@@ -1,9 +1,6 @@
-import type {
-  SimulationResult,
-  WorkflowContextType,
-  WorkflowJson,
-} from "@/types/workflow";
-import type { Node } from "@xyflow/react";
+import { useSimulation } from "@/hooks/use-simulation";
+import type { WorkflowContextType } from "@/types/workflow";
+import { useNodesData } from "@xyflow/react";
 import React from "react";
 
 const WorkflowContext = React.createContext<WorkflowContextType | null>(null);
@@ -12,21 +9,32 @@ export const WorkflowProvider: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
   const [dragData, setDragData] = React.useState<string | null>(null);
-  const [selectedNode, setSelectedNode] = React.useState<Node | null>(null);
+  const [selectedNodeId, setSelectedNodeId] = React.useState<string | null>(
+    null
+  );
   const [isSandboxOpen, setIsSandboxOpen] = React.useState(false);
-  const openSandbox = () => setIsSandboxOpen(true);
-  const closeSandbox = () => setIsSandboxOpen(false);
+  const { runSimulation, simulation, isSimulating } = useSimulation();
 
+  const selectedNode = useNodesData(selectedNodeId!);
+
+  const openSandbox = () => setIsSandboxOpen(true);
+
+  const closeSandbox = () => setIsSandboxOpen(false);
+  const openChangeSandboxSidebar = (v: boolean) => setIsSandboxOpen(v);
   return (
     <WorkflowContext.Provider
       value={{
         dragData,
         setDragData,
         selectedNode,
-        setSelectedNode,
+        setSelectedNodeId,
         isSandboxOpen,
         openSandbox,
         closeSandbox,
+        runSimulation,
+        simulation,
+        isSimulating,
+        openChangeSandboxSidebar,
       }}
     >
       {children}

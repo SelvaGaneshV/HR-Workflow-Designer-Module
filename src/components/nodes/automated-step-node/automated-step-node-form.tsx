@@ -9,10 +9,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { InputGroupButton } from "@/components/ui/input-group";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { useWorkflow } from "@/context/workflow-context";
-import { useQuery } from "@tanstack/react-query";
+import { automatedStepActionsQueryOptions } from "@/query/nodes-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { useReactFlow } from "@xyflow/react";
 import { ChevronDownIcon } from "lucide-react";
 import React from "react";
@@ -36,11 +36,11 @@ const AutomatedStepNodeForm = () => {
     updateNodeData(selectedNode!.id, data);
   };
   const onChangeKeyValue = (value: KeyValuePair[]) => {
-    console.log(value);
+    onNodeDataChange({ customFields: value });
   };
 
   return (
-    <div className="flex flex-col items-center justify-start gap-2.5">
+    <div className="flex flex-col h-full items-center justify-start gap-2.5">
       <NodeInput
         onChange={(value) => {
           onNodeDataChange({
@@ -54,9 +54,7 @@ const AutomatedStepNodeForm = () => {
       />
       <AutomationsActions onChange={onNodeDataChange} />
 
-      <ScrollArea className="w-full  h-[600px]">
-        <KeyValueInput onChange={onChangeKeyValue} />
-      </ScrollArea>
+      <KeyValueInput onChange={onChangeKeyValue} />
     </div>
   );
 };
@@ -68,13 +66,9 @@ const AutomationsActions: React.FC<{
   const [action, setAction] = React.useState<string | undefined>(
     selectedNode?.data?.action as string | undefined
   );
-  const { data: actionList, isLoading } = useQuery({
-    queryKey: ["automated-steps"],
-    queryFn: async (): Promise<AutomationResponse[]> => {
-      const response = await fetch("/api/automations");
-      return response.json();
-    },
-  });
+  const { data: actionList, isLoading } = useSuspenseQuery(
+    automatedStepActionsQueryOptions()
+  );
   const params = actionList?.find((item) => item.id === action)?.params || [];
   const selectedAction =
     actionList?.find((item) => item.id === action)?.label || "";
@@ -104,7 +98,7 @@ const AutomationsActions: React.FC<{
           <DropdownMenuRadioGroup
             value={action}
             onValueChange={(val) => {
-              onChange(val);
+              onChange({ action: val });
               setAction(val);
             }}
           >

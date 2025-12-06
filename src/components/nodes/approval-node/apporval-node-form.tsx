@@ -4,7 +4,6 @@ import NodeInput from "@/components/shared/node-input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useWorkflow } from "@/context/workflow-context";
 import { useReactFlow } from "@xyflow/react";
-import React from "react";
 
 /**
  * A form component for ApprovalNode.
@@ -20,11 +19,11 @@ const ApprovalNodeForm = () => {
     updateNodeData(selectedNode!.id, data);
   };
   const onChangeKeyValue = (value: KeyValuePair[]) => {
-    console.log(value);
+    onNodeDataChange({ customFields: value });
   };
 
   return (
-    <div className="flex flex-col items-center justify-start gap-2.5">
+    <div className="flex flex-col h-full items-center justify-start gap-2.5">
       <NodeInput
         onChange={(value) => {
           onNodeDataChange({
@@ -58,9 +57,8 @@ const ApprovalNodeForm = () => {
         label="Auto-approve"
         value={selectedNode?.data?.autoApprove}
       />
-      <ScrollArea className="w-full  h-[600px]">
-        <KeyValueInput onChange={onChangeKeyValue} />
-      </ScrollArea>
+
+      <KeyValueInput onChange={onChangeKeyValue} />
     </div>
   );
 };

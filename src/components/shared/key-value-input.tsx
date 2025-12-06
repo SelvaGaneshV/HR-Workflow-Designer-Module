@@ -119,116 +119,148 @@ const KeyValueInput: React.FC<Props> = ({ value = [], onChange }) => {
       </Button>
 
       <div className=" flex flex-col gap-2.5">
-        {rows.map((row, i) => {
-          const keyError = haskeyError(row.key, i);
-
-          const valueError = hasValueError(row.value, row.type);
-
-          return (
-            <FieldGroup className="bg-background p-3 rounded-md shadow-2xs gap-2.5">
-              <FieldSet className="">
-                <Field orientation={"vertical"}>
-                  <FieldLabel>Key</FieldLabel>
-                  <InputGroup>
-                    <InputGroupInput
-                      value={row.key}
-                      placeholder="enter key"
-                      onChange={(e) => updateField(i, "key", e.target.value)}
-                    />
-
-                    <InputGroupAddon align="inline-end">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <InputGroupButton
-                            variant="ghost"
-                            className="pr-1.5! text-xs text-center"
-                          >
-                            {row.type || "type"}{" "}
-                            <ChevronDownIcon className="size-3" />
-                          </InputGroupButton>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="rounded-md">
-                          <DropdownMenuRadioGroup
-                            value={row.type}
-                            onValueChange={(val) =>
-                              updateField(i, "type", val as KVType)
-                            }
-                          >
-                            <DropdownMenuRadioItem value="string">
-                              String
-                            </DropdownMenuRadioItem>
-                            <DropdownMenuRadioItem value="number">
-                              Number
-                            </DropdownMenuRadioItem>
-                            <DropdownMenuRadioItem value="boolean">
-                              Boolean
-                            </DropdownMenuRadioItem>
-                            <DropdownMenuRadioItem value="object">
-                              Object
-                            </DropdownMenuRadioItem>
-                            <DropdownMenuRadioItem value="array">
-                              Array
-                            </DropdownMenuRadioItem>
-                          </DropdownMenuRadioGroup>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-
-                      <InputGroupButton
-                        variant="ghost"
-                        size="icon-sm"
-                        onClick={() => removeRow(i)}
-                      >
-                        <Trash2 className="w-4 h-4 text-red-500" />
-                      </InputGroupButton>
-                    </InputGroupAddon>
-                  </InputGroup>
-                  <FieldError>{keyError}</FieldError>
-                </Field>
-              </FieldSet>
-              <FieldSet>
-                <Field orientation={"vertical"}>
-                  <FieldLabel>Value</FieldLabel>
-                  {row.type === "boolean" ? (
-                    <Select
-                      value={String(row.value)}
-                      onValueChange={(v) =>
-                        updateField(i, "value", v === "true")
-                      }
-                    >
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="true">true</SelectItem>
-                        <SelectItem value="false">false</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  ) : row.type === "object" || row.type === "array" ? (
-                    <Textarea
-                      value={row.value}
-                      onChange={(e) => {
-                        try {
-                          updateField(i, "value", e.target.value);
-                        } catch (e) {}
-                      }}
-                      className="text-xs text-muted-foreground mt-2"
-                    />
-                  ) : (
-                    <Input
-                      value={row.value}
-                      type={row.type === "number" ? "number" : "text"}
-                      placeholder="value"
-                      onChange={(e) => updateField(i, "value", e.target.value)}
-                    />
-                  )}
-                  <FieldError>{valueError}</FieldError>
-                </Field>
-              </FieldSet>
-            </FieldGroup>
-          );
-        })}
+        {rows.map((row, i) => (
+          <KeyValueInputItems
+            key={i}
+            row={row}
+            i={i}
+            updateField={updateField}
+            removeRow={removeRow}
+            haskeyError={haskeyError}
+            hasValueError={hasValueError}
+          />
+        ))}
       </div>
     </div>
+  );
+};
+
+const KeyValueInputItems: React.FC<{
+  i: number;
+  row: KeyValuePair;
+  updateField: (i: number, field: keyof KeyValuePair, val: any) => void;
+  removeRow: (i: number) => void;
+  haskeyError: (key: string, index: number) => string | null;
+  hasValueError: (value: any, type: KVType) => string | null;
+}> = ({ i, row, haskeyError, hasValueError, updateField, removeRow }) => {
+  const [keyError, setKeyError] = useState<string | null>(null);
+  const [valueError, setValueError] = useState<string | null>(null);
+
+  return (
+    <FieldGroup className="bg-background p-3 rounded-md shadow-2xs gap-2.5">
+      <FieldSet className="">
+        <Field orientation={"vertical"}>
+          <FieldLabel>Key</FieldLabel>
+          <InputGroup>
+            <InputGroupInput
+              value={row.key}
+              placeholder="enter key"
+              onChange={(e) => {
+                const key = e.target.value;
+                const error = haskeyError(key, i);
+                if (error) setKeyError(error);
+                else setKeyError(null);
+                updateField(i, "key", e.target.value);
+              }}
+            />
+
+            <InputGroupAddon align="inline-end">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <InputGroupButton
+                    variant="ghost"
+                    className="pr-1.5! text-xs text-center"
+                  >
+                    {row.type || "type"} <ChevronDownIcon className="size-3" />
+                  </InputGroupButton>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="rounded-md">
+                  <DropdownMenuRadioGroup
+                    value={row.type}
+                    onValueChange={(val) => {
+                      updateField(i, "type", val);
+                    }}
+                  >
+                    <DropdownMenuRadioItem value="string">
+                      String
+                    </DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem value="number">
+                      Number
+                    </DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem value="boolean">
+                      Boolean
+                    </DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem value="object">
+                      Object
+                    </DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem value="array">
+                      Array
+                    </DropdownMenuRadioItem>
+                  </DropdownMenuRadioGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              <InputGroupButton
+                variant="ghost"
+                size="icon-sm"
+                onClick={() => removeRow(i)}
+              >
+                <Trash2 className="w-4 h-4 text-red-500" />
+              </InputGroupButton>
+            </InputGroupAddon>
+          </InputGroup>
+          <FieldError>{keyError}</FieldError>
+        </Field>
+      </FieldSet>
+      <FieldSet>
+        <Field orientation={"vertical"}>
+          <FieldLabel>Value</FieldLabel>
+          {row.type === "boolean" ? (
+            <Select
+              value={String(row.value)}
+              onValueChange={(v) => {
+                const error = hasValueError(v === "true", row.type);
+                if (error) setValueError(error);
+                else setValueError(null);
+                updateField(i, "value", v === "true");
+              }}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="true">true</SelectItem>
+                <SelectItem value="false">false</SelectItem>
+              </SelectContent>
+            </Select>
+          ) : row.type === "object" || row.type === "array" ? (
+            <Textarea
+              value={row.value}
+              onChange={(e) => {
+                const error = hasValueError(e.target.value, row.type);
+                if (error) setValueError(error);
+                else setValueError(null);
+                updateField(i, "value", e.target.value);
+              }}
+              className="text-xs text-muted-foreground mt-2"
+            />
+          ) : (
+            <Input
+              value={row.value}
+              type={row.type === "number" ? "number" : "text"}
+              placeholder="value"
+              onChange={(e) => {
+                const error = hasValueError(e.target.value, row.type);
+                if (error) setValueError(error);
+                else setValueError(null);
+                updateField(i, "value", e.target.value);
+              }}
+            />
+          )}
+          <FieldError>{valueError}</FieldError>
+        </Field>
+      </FieldSet>
+    </FieldGroup>
   );
 };
 

@@ -4,8 +4,9 @@ import EndNodeForm from "@/components/nodes/end-node/end-node-form";
 import StarNodeForm from "@/components/nodes/start-node/start-node-form";
 import TaskNodeForm from "@/components/nodes/task-node/task-node-form";
 import { useWorkflow } from "@/context/workflow-context";
-import { Panel } from "@xyflow/react";
+import { Panel, useNodesData, useReactFlow } from "@xyflow/react";
 import type React from "react";
+import { ScrollArea } from "../ui/scroll-area";
 
 /**
  * A panel that displays a form for the currently selected node.
@@ -25,17 +26,22 @@ const NodeFormPanel: React.FC = () => {
       position="top-right"
       className="bg-sidebar flex flex-col items-center justify-start h-[97%] w-xs rounded-md border border-sidebar-border"
     >
-      <div className="flex items-center justify-center border-b border-sidebar-border px-3 py-2">
-        <span className="text-xl font-medium text-center text-muted-foreground">
+      <div className="flex w-full h-12 items-center justify-start border-b border-sidebar-border px-3 py-2">
+        <span className="text-xl font-medium text-start truncate capitalize text-muted-foreground">
           {
-            (selectedNode?.data?.label
-              ? selectedNode?.data?.label
-              : "Start") as React.ReactNode
+            (selectedNode?.data?.title
+              ? selectedNode?.data?.title
+              : selectedNode?.type) as React.ReactNode
           }
         </span>
       </div>
-      <div className="flex-1 w-full h-full p-3">
-        <RenderForm type={selectedNode?.type} />
+      <div className="flex-1 min-h-0 w-full overflow-hidden ">
+        <ScrollArea className="w-full h-full p-3" >
+          <RenderForm
+            key={selectedNode.id + "-form"}
+            type={selectedNode?.type}
+          />
+        </ScrollArea>
       </div>
     </Panel>
   );

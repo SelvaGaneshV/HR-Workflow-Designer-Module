@@ -1,16 +1,23 @@
 import type { Edge, Node } from "@xyflow/react";
 type SimulationResult = {
-  log: string[];
-  status: "success" | "error";
+  logs: Record<string, { type: string; message: string }[]>;
+  paths: string[][];
 };
-type WorkflowContextType = {
+type UseSimulation = {
+  simulation: SimulationResult | undefined;
+  runSimulation: (workflowJson: WorkflowJson) => void;
+  isSimulating: boolean;
+};
+
+type WorkflowContextType = UseSimulation & {
   dragData: string | null;
   setDragData: React.Dispatch<React.SetStateAction<string | null>>;
-  selectedNode: Node | null;
-  setSelectedNode: React.Dispatch<React.SetStateAction<Node | null>>;
+  selectedNode: Pick<Node, "id" | "type" | "data"> | null;
+  setSelectedNodeId: React.Dispatch<React.SetStateAction<string | null>>;
   isSandboxOpen: boolean;
   openSandbox: () => void;
   closeSandbox: () => void;
+  openChangeSandboxSidebar: (v: boolean) => void;
 };
 
 type WorkflowJson = { nodes: Node[]; edges: Edge[] };
@@ -24,4 +31,5 @@ export type {
   SimulationResult,
   WorkflowSandboxProps,
   WorkflowJson,
+  UseSimulation,
 };

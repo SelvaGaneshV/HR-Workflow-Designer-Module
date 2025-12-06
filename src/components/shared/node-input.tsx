@@ -2,6 +2,8 @@ import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import type { InputDeciderProps, NodeInputProps } from "@/types/node-form";
 import React from "react";
+import { Textarea } from "../ui/textarea";
+import { Checkbox } from "../ui/checkbox";
 
 const NodeInput: React.FC<NodeInputProps> = ({
   onChange,
@@ -10,12 +12,13 @@ const NodeInput: React.FC<NodeInputProps> = ({
   label,
   value,
   disable = false,
+  orientation = "vertical",
 }) => {
   const id = React.useId();
   const [error, setError] = React.useState<string | null | undefined>(null);
 
   return (
-    <Field id={id}>
+    <Field id={id} orientation={orientation}>
       <FieldLabel>{label}</FieldLabel>
       <InputDecider
         key={id + "-InputDecider"}
@@ -42,6 +45,37 @@ const InputDecider: React.FC<InputDeciderProps> = ({
   disable,
 }) => {
   switch (type) {
+    case "checkbox":
+      return (
+        <Checkbox
+          className="size-5"
+          defaultChecked={value}
+          onCheckedChange={(value) => {
+            const err = validate?.(value);
+            if (err) setError(err);
+            else {
+              onChange(value);
+              if (error) setError(null);
+            }
+          }}
+          disabled={disable}
+        />
+      );
+    case "textarea":
+      return (
+        <Textarea
+          defaultValue={value}
+          onChange={(e) => {
+            const err = validate?.(e.target.value);
+            if (err) setError(err);
+            else {
+              onChange(e.target.value);
+              if (error) setError(null);
+            }
+          }}
+          disabled={disable}
+        />
+      );
     default:
       return (
         <Input
