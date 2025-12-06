@@ -1,28 +1,32 @@
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import type { NodeProps } from "@xyflow/react";
+import CustomNodeToolBar from "@/components/nodes/custom-node-toolbar";
+import { Handle, Position, type NodeProps } from "@xyflow/react";
 import { Play } from "lucide-react";
 import React from "react";
 
-const StartNode: React.FC<NodeProps> = ({ data }) => {
+const StartNode: React.FC<NodeProps> = ({ id, data }) => {
   return (
-    <Card className="cursor-grab active:cursor-grabbing min-w-30 max-h-12 hover:bg-sidebar-accent rounded-md transition-colors py-2">
-      <CardHeader className="flex items-center gap-3">
-        <Play className="size-5 text-muted-foreground" />
+    <div className="cursor-grab active:cursor-grabbing p-4 min-w-30 border min-h-12 bg-secondary text-secondary-foreground rounded-md transition-colors">
+      <CustomNodeToolBar id={id} />
+      <div className="flex items-center gap-3">
+        <Play className="size-5" />
         <div>
-          <CardTitle className="text-sm font-medium" title="">
-            {(data?.label ? data?.label : "Start") as React.ReactNode}
-          </CardTitle>
+          <div className="text-sm font-medium" title="">
+            {(data?.title ? data?.title : "Start") as React.ReactNode}
+          </div>
         </div>
-        <CardDescription className="text-xs text-muted-foreground">
-          {data?.description as React.ReactNode}
-        </CardDescription>
-      </CardHeader>
-    </Card>
+        <div className="text-xs">{data?.description as React.ReactNode}</div>
+      </div>
+
+      <Handle
+        id={id + "-source"}
+        className="size-2.5!"
+        style={{
+          right: "-10%",
+        }}
+        type="source"
+        position={Position.Right}
+      />
+    </div>
   );
 };
 

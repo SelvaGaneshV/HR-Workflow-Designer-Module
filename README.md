@@ -56,9 +56,9 @@ Each documented with:
 ## 🗺️ Workflow Canvas Features
 - [x] Drag-and-drop from sidebar  
 - [x] Add / remove nodes  
-- [ ] Connect edges  
+- [x] Connect edges  
 - [x] Node selection → edit panel  
-- [ ] Basic constraints (Start node first, etc.)  
+- [x] Basic constraints (Start node first, etc.)  
 
 ---
 
@@ -72,7 +72,7 @@ Each documented with:
 
 ## 🧪 Workflow Test / Sandbox
 - [ ] How workflow JSON is serialized  
-- [ ] API call to `/simulate`  
+- [x] API call to `/simulate`  
 - [ ] Rendering the step-by-step execution log  
 - [ ] Validation logic (cycles, missing links)
 
@@ -95,7 +95,7 @@ Each documented with:
 ---
 
 ## 📦 Optional Enhancements (if implemented)
-- [ ] Export / Import workflow  
+- [x] Export / Import workflow  
 - [ ] Node templates  
 - [ ] Undo / Redo  
 - [ ] Mini-map / Zoom controls  

@@ -1,7 +1,7 @@
+import { Field, FieldError, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
 import type { InputDeciderProps, NodeInputProps } from "@/types/node-form";
 import React from "react";
-import { Field, FieldError, FieldLabel } from "../ui/field";
-import { Input } from "../ui/input";
 
 const NodeInput: React.FC<NodeInputProps> = ({
   onChange,
@@ -9,6 +9,7 @@ const NodeInput: React.FC<NodeInputProps> = ({
   type = "text",
   label,
   value,
+  disable = false,
 }) => {
   const id = React.useId();
   const [error, setError] = React.useState<string | null | undefined>(null);
@@ -24,6 +25,7 @@ const NodeInput: React.FC<NodeInputProps> = ({
         validate={validate}
         error={error}
         setError={(error) => setError(error)}
+        disable={disable}
       />
       <FieldError>{error}</FieldError>
     </Field>
@@ -37,6 +39,7 @@ const InputDecider: React.FC<InputDeciderProps> = ({
   validate,
   error,
   setError,
+  disable,
 }) => {
   switch (type) {
     default:
@@ -57,6 +60,7 @@ const InputDecider: React.FC<InputDeciderProps> = ({
               if (error) setError(null);
             }
           }}
+          disabled={disable}
         />
       );
   }

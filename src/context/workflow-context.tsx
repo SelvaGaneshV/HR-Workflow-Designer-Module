@@ -1,4 +1,8 @@
-import type { WorkflowContextType } from "@/types/workflow";
+import type {
+  SimulationResult,
+  WorkflowContextType,
+  WorkflowJson,
+} from "@/types/workflow";
 import type { Node } from "@xyflow/react";
 import React from "react";
 
@@ -9,9 +13,21 @@ export const WorkflowProvider: React.FC<React.PropsWithChildren> = ({
 }) => {
   const [dragData, setDragData] = React.useState<string | null>(null);
   const [selectedNode, setSelectedNode] = React.useState<Node | null>(null);
+  const [isSandboxOpen, setIsSandboxOpen] = React.useState(false);
+  const openSandbox = () => setIsSandboxOpen(true);
+  const closeSandbox = () => setIsSandboxOpen(false);
+
   return (
     <WorkflowContext.Provider
-      value={{ dragData, setDragData, selectedNode, setSelectedNode }}
+      value={{
+        dragData,
+        setDragData,
+        selectedNode,
+        setSelectedNode,
+        isSandboxOpen,
+        openSandbox,
+        closeSandbox,
+      }}
     >
       {children}
     </WorkflowContext.Provider>

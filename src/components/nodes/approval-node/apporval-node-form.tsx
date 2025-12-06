@@ -1,10 +1,18 @@
 import type { KeyValuePair } from "@/components/shared/key-value-input";
 import KeyValueInput from "@/components/shared/key-value-input";
 import NodeInput from "@/components/shared/node-input";
-import { useWorkflow } from "@/contexts/workflow-context";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { useWorkflow } from "@/context/workflow-context";
 import { useReactFlow } from "@xyflow/react";
 import React from "react";
 
+/**
+ * A form component for ApprovalNode.
+ * It contains input fields for title, approver role and auto-approve.
+ * It also contains a KeyValueInput component for custom key-value pairs.
+ * The form data is updated in the workflow context when the fields are changed.
+ * @returns A JSX element representing the ApprovalNode form.
+ */
 const ApprovalNodeForm = () => {
   const { updateNodeData } = useReactFlow();
   const { selectedNode } = useWorkflow();
@@ -50,9 +58,9 @@ const ApprovalNodeForm = () => {
         label="Auto-approve"
         value={selectedNode?.data?.autoApprove}
       />
-      <div className="w-full">
+      <ScrollArea className="w-full  h-[600px]">
         <KeyValueInput onChange={onChangeKeyValue} />
-      </div>
+      </ScrollArea>
     </div>
   );
 };

@@ -1,44 +1,35 @@
-import React, { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Trash2, Plus, Search, ChevronDownIcon } from "lucide-react";
 import {
-  Select,
-  SelectTrigger,
-  SelectContent,
-  SelectItem,
-  SelectValue,
-} from "@/components/ui/select";
-import { cn } from "@/lib/utils";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+  FieldSet,
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupButton,
   InputGroupInput,
-  InputGroupText,
-  InputGroupTextarea,
-} from "../ui/input-group";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+} from "@/components/ui/input-group";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
-import { Separator } from "../ui/separator";
-import {
-  Field,
-  FieldDescription,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-  FieldSet,
-} from "../ui/field";
-import { Textarea } from "../ui/textarea";
-import { ScrollArea } from "../ui/scroll-area";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { ChevronDownIcon, Plus, Trash2 } from "lucide-react";
+import React, { useState } from "react";
 
 export type KVType = "string" | "number" | "boolean" | "object" | "array";
 
@@ -121,8 +112,8 @@ const KeyValueInput: React.FC<Props> = ({ value = [], onChange }) => {
   };
 
   return (
-    <div className=" flex flex-col w-full gap-2.5">
-      <Button className="self-end" onClick={addRow}>
+    <div className=" flex flex-col relative w-full gap-2.5">
+      <Button className="self-end sticky top-0 z-10" onClick={addRow}>
         <Plus className="w-4 h-4 mr-2" />
         Add Field
       </Button>

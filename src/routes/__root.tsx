@@ -1,41 +1,42 @@
 import { ThemeProvider } from "@/components/theme-provider";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/sonner";
+import appCss from "@/index.css?url";
+import type { QueryClient } from "@tanstack/react-query";
 import {
   HeadContent,
   Outlet,
+  Scripts,
   createRootRouteWithContext,
 } from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-import "../index.css";
-import { SidebarProvider } from "@/components/ui/sidebar";
+import * as React from "react";
 
-export interface RouterAppContext {}
-
-export const Route = createRootRouteWithContext<RouterAppContext>()({
-  component: RootComponent,
+export const Route = createRootRouteWithContext<{
+  queryClient: QueryClient;
+}>()({
   head: () => ({
     meta: [
       {
-        title: "my-better-t-app",
+        charSet: "utf-8",
       },
       {
-        name: "description",
-        content: "my-better-t-app is a web application",
+        name: "viewport",
+        content: "width=device-width, initial-scale=1",
       },
-    ],
-    links: [
       {
-        rel: "icon",
-        href: "/favicon.ico",
+        title: "Hr Workflow",
+        description: "Hr Workflow Designer",
       },
     ],
+
+    links: [{ rel: "stylesheet", href: appCss }],
   }),
+  shellComponent: RootComponent,
 });
 
 function RootComponent() {
   return (
-    <div className="flex h-screen w-screen overflow-hidden">
-      <HeadContent />
+    <RootDocument>
       <ThemeProvider
         attribute="class"
         defaultTheme="dark"
@@ -47,7 +48,20 @@ function RootComponent() {
         </SidebarProvider>
         <Toaster richColors />
       </ThemeProvider>
-      <TanStackRouterDevtools position="bottom-left" />
-    </div>
+    </RootDocument>
+  );
+}
+
+function RootDocument({ children }: { children: React.ReactNode }) {
+  return (
+    <html>
+      <head>
+        <HeadContent />
+      </head>
+      <body>
+        {children}
+        <Scripts />
+      </body>
+    </html>
   );
 }

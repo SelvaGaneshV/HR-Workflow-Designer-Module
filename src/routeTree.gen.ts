@@ -10,33 +10,53 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiSimulateRouteImport } from './routes/api/simulate'
+import { Route as ApiAutomationsRouteImport } from './routes/api/automations'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiSimulateRoute = ApiSimulateRouteImport.update({
+  id: '/api/simulate',
+  path: '/api/simulate',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAutomationsRoute = ApiAutomationsRouteImport.update({
+  id: '/api/automations',
+  path: '/api/automations',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/api/automations': typeof ApiAutomationsRoute
+  '/api/simulate': typeof ApiSimulateRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/api/automations': typeof ApiAutomationsRoute
+  '/api/simulate': typeof ApiSimulateRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/api/automations': typeof ApiAutomationsRoute
+  '/api/simulate': typeof ApiSimulateRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/api/automations' | '/api/simulate'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/api/automations' | '/api/simulate'
+  id: '__root__' | '/' | '/api/automations' | '/api/simulate'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ApiAutomationsRoute: typeof ApiAutomationsRoute
+  ApiSimulateRoute: typeof ApiSimulateRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,12 +68,37 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/simulate': {
+      id: '/api/simulate'
+      path: '/api/simulate'
+      fullPath: '/api/simulate'
+      preLoaderRoute: typeof ApiSimulateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/automations': {
+      id: '/api/automations'
+      path: '/api/automations'
+      fullPath: '/api/automations'
+      preLoaderRoute: typeof ApiAutomationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ApiAutomationsRoute: ApiAutomationsRoute,
+  ApiSimulateRoute: ApiSimulateRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}

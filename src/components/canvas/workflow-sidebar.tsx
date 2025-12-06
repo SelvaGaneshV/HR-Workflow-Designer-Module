@@ -14,7 +14,7 @@ import {
   SidebarGroupLabel,
   SidebarHeader,
 } from "@/components/ui/sidebar";
-import { useWorkflow } from "@/contexts/workflow-context";
+import { useWorkflow } from "@/context/workflow-context";
 import { Bot, ClipboardCheck, Play, SquareCheckBig, Stamp } from "lucide-react";
 import React from "react";
 
@@ -51,7 +51,36 @@ const NODE_TYPES = [
   },
 ];
 
-function WorkflowSidebar() {
+/**
+ * WorkflowSidebar component.
+ *
+ * This component renders a sidebar that contains a list of available
+ * workflow nodes. Users can drag and drop these nodes onto the canvas to
+ * create a workflow.
+ *
+ * The sidebar contains a header with the title "Workflow Nodes", a list of
+ * available nodes, and a footer with a ModeToggle component.
+ *s
+ * The available nodes are defined in the NODE_TYPES array and include the
+ * following:
+ * - Start Node
+ * - Task Node
+ * - Approval Node
+ * - Automated Step
+ * - End Node
+ *
+ * Each node is rendered as a Card component with a icon, label, and description.
+ * The Card component is draggable and will pass the node type to the
+ * onDragStart event handler when dragged.
+ *
+ * The onDragStart event handler sets the drag data to the node type and allows
+ * the drag event to be moved.
+ *
+ * The WorkflowSidebar component is connected to the useWorkflow hook and gets
+ * the setDragData function from it. This function is used to set the drag data
+ * when a node is dragged.
+ */
+const WorkflowSidebar: React.FC = () => {
   const { setDragData } = useWorkflow();
   const onDragStart = (event: React.DragEvent, type: string) => {
     setDragData(type);
@@ -106,6 +135,6 @@ function WorkflowSidebar() {
       </SidebarFooter>
     </Sidebar>
   );
-}
+};
 
 export default WorkflowSidebar;

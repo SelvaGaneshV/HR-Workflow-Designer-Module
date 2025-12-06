@@ -4,7 +4,8 @@ import KeyValueInput, {
 import NodeInput from "@/components/shared/node-input";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { useWorkflow } from "@/contexts/workflow-context";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { useWorkflow } from "@/context/workflow-context";
 import { useReactFlow } from "@xyflow/react";
 
 const StarNodeForm = () => {
@@ -22,17 +23,17 @@ const StarNodeForm = () => {
       <NodeInput
         onChange={(value) => {
           onNodeDataChange({
-            label: value,
+            title: value,
           });
         }}
         validate={(value) => (!value ? "Required" : null)}
         type="text"
-        label="Label"
-        value={selectedNode?.data?.label}
+        label="Title"
+        value={selectedNode?.data?.title}
       />
-      <div className="w-full">
+      <ScrollArea className="w-full h-[750px]">
         <KeyValueInput onChange={onChangeKeyValue} />
-      </div>
+      </ScrollArea>
     </div>
   );
 };

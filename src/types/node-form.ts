@@ -7,6 +7,7 @@ type NodeInputProps = {
   onChange: (value: any) => void;
   validate?: (value: any) => string | null;
   type?: NodeInputType;
+  disable?: boolean;
 };
 type InputDeciderProps = Omit<NodeInputProps, "label"> & {
   error: string | null | undefined;

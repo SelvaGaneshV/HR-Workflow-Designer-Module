@@ -2,7 +2,7 @@ import type { KeyValuePair } from "@/components/shared/key-value-input";
 import KeyValueInput from "@/components/shared/key-value-input";
 import NodeInput from "@/components/shared/node-input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useWorkflow } from "@/contexts/workflow-context";
+import { useWorkflow } from "@/context/workflow-context";
 import { useReactFlow } from "@xyflow/react";
 
 const TaskNodeForm = () => {
@@ -61,7 +61,7 @@ const TaskNodeForm = () => {
         label="Due Date"
         value={selectedNode?.data?.dueDate}
       />
-      <ScrollArea className="h-full w-full flex-1 ">
+      <ScrollArea className="w-full h-[520px]">
         <KeyValueInput onChange={onChangeKeyValue} />
       </ScrollArea>
     </div>

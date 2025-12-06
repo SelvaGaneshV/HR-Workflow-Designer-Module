@@ -3,11 +3,17 @@ import AutomatedStepNodeForm from "@/components/nodes/automated-step-node/automa
 import EndNodeForm from "@/components/nodes/end-node/end-node-form";
 import StarNodeForm from "@/components/nodes/start-node/start-node-form";
 import TaskNodeForm from "@/components/nodes/task-node/task-node-form";
-import { useWorkflow } from "@/contexts/workflow-context";
+import { useWorkflow } from "@/context/workflow-context";
 import { Panel } from "@xyflow/react";
 import type React from "react";
 
-const NodeFormPanel = () => {
+/**
+ * A panel that displays a form for the currently selected node.
+ * If no node is selected, it renders nothing.
+ * The form is determined by the type of the selected node.
+ * @returns A panel with a form for the selected node.
+ */
+const NodeFormPanel: React.FC = () => {
   const { selectedNode } = useWorkflow();
 
   if (!selectedNode) {
@@ -35,6 +41,18 @@ const NodeFormPanel = () => {
   );
 };
 
+/**
+ * Renders a form based on the type of the node.
+ * If the type is "start", it renders a StarNodeForm.
+ * If the type is "end", it renders an EndNodeForm.
+ * If the type is "approval", it renders an ApprovalNodeForm.
+ * If the type is "task", it renders a TaskNodeForm.
+ * If the type is "automatedStep", it renders an AutomatedStepNodeForm.
+ * If the type is undefined or any other value, it renders null.
+ *
+ * @param {string | undefined} type - The type of the node.
+ * @returns {React.ReactElement | null} - The rendered form or null if the type is undefined or any other value.
+ */
 const RenderForm: React.FC<{ type: string | undefined }> = ({ type }) => {
   switch (type) {
     case "start":

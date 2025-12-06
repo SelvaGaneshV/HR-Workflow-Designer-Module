@@ -1,12 +1,16 @@
+import NodeFormPanel from "@/components/canvas/node-form-panel";
+import BasicEdge from "@/components/edges/basic-edge/basic-edge";
 import ApprovalNode from "@/components/nodes/approval-node/approval-node";
 import AutomatedStepNode from "@/components/nodes/automated-step-node/automated-step-node";
 import EndNode from "@/components/nodes/end-node/end-node";
 import StartNode from "@/components/nodes/start-node/start-node";
 import TaskNode from "@/components/nodes/task-node/task-node";
-import { useWorkflow } from "@/contexts/workflow-context";
+import { useWorkflow } from "@/context/workflow-context";
 import {
   addEdge,
   Background,
+  ConnectionLineType,
+  getOutgoers,
   ReactFlow,
   useEdgesState,
   useNodesState,
@@ -16,7 +20,7 @@ import {
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { useCallback } from "react";
-import NodeFormPanel from "./node-form-panel";
+import WorkflowToolbar from "./workflow-toolbar";
 
 const NODE_TYPES = {
   start: StartNode,
@@ -26,10 +30,23 @@ const NODE_TYPES = {
   end: EndNode,
 };
 
-function WorkflowCanvas() {
+const EDGE_TYPES = {
+  default: BasicEdge,
+};
+
+/**
+ * WorkflowCanvas component
+ *
+ * This component is responsible for rendering the workflow canvas
+ * where the user can create and edit nodes and edges.
+ *
+ * @returns {React.ReactElement} a React element representing the WorkflowCanvas component
+ */
+
+const WorkflowCanvas: React.FC = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const { screenToFlowPosition } = useReactFlow();
+  const { screenToFlowPosition, getEdges, getNodes } = useReactFlow();
   const { dragData, setDragData, setSelectedNode } = useWorkflow();
 
   const onConnect = useCallback(
@@ -41,6 +58,30 @@ function WorkflowCanvas() {
     event.preventDefault();
     event.dataTransfer.dropEffect = "move";
   }, []);
+
+  const isValidConnection = useCallback(
+    (connection: Connection) => {
+      // we are using getNodes and getEdges helpers here
+      // to make sure we create isValidConnection function only once
+      const nodes = getNodes();
+      const edges = getEdges();
+      const target = nodes.find((node) => node.id === connection.target);
+      const hasCycle = (node: Node, visited = new Set()) => {
+        if (visited.has(node.id)) return false;
+
+        visited.add(node.id);
+
+        for (const outgoer of getOutgoers(node, nodes, edges)) {
+          if (outgoer.id === connection.source) return true;
+          if (hasCycle(outgoer, visited)) return true;
+        }
+      };
+      if (!target) return false;
+      if (target.id === connection.source) return false;
+      return !hasCycle(target);
+    },
+    [getNodes, getEdges]
+  );
 
   const onDrop = useCallback(
     (event: React.DragEvent) => {
@@ -75,20 +116,21 @@ function WorkflowCanvas() {
         onConnect={onConnect}
         onDragOver={onDragOver}
         onDrop={onDrop}
+        isValidConnection={isValidConnection}
         onEdgesChange={onEdgesChange}
         onPaneClick={() => {
           setSelectedNode(null);
         }}
+        connectionLineType={ConnectionLineType.SmoothStep}
+        edgeTypes={EDGE_TYPES}
         nodeTypes={NODE_TYPES}
-        onNodeClick={(_, node) => {
-          if (node) setSelectedNode(node as Node);
-        }}
       >
         <Background color="#aaa" gap={16} />
         <NodeFormPanel />
+        <WorkflowToolbar />
       </ReactFlow>
     </div>
   );
-}
+};
 
 export default WorkflowCanvas;
