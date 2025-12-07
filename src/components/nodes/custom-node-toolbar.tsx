@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { useWorkflow } from "@/context/workflow-context";
+import { useWorkflow } from "@/hooks/use-workflow";
 import { NodeToolbar, Position, useReactFlow } from "@xyflow/react";
 import { Edit, TrashIcon } from "lucide-react";
 import React from "react";

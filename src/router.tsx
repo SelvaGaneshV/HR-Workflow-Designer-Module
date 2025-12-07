@@ -1,9 +1,9 @@
+import { WorkflowProvider } from "@/context/workflow-context";
+import { routeTree } from "@/routeTree.gen";
 import { QueryClient } from "@tanstack/react-query";
 import { createRouter } from "@tanstack/react-router";
 import { setupRouterSsrQueryIntegration } from "@tanstack/react-router-ssr-query";
-import { routeTree } from "./routeTree.gen";
 import { ReactFlowProvider } from "@xyflow/react";
-import { WorkflowProvider } from "./context/workflow-context";
 
 export function getRouter() {
   const queryClient = new QueryClient();

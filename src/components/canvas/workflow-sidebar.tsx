@@ -14,7 +14,9 @@ import {
   SidebarGroupLabel,
   SidebarHeader,
 } from "@/components/ui/sidebar";
-import { useWorkflow } from "@/context/workflow-context";
+import { useWorkflow } from "@/hooks/use-workflow";
+import { cn } from "@/lib/utils";
+import { useNodes } from "@xyflow/react";
 import { Bot, ClipboardCheck, Play, SquareCheckBig, Stamp } from "lucide-react";
 import React from "react";
 
@@ -82,6 +84,10 @@ const NODE_TYPES = [
  */
 const WorkflowSidebar: React.FC = () => {
   const { setDragData } = useWorkflow();
+  const nodes = useNodes();
+  const hasStartNode = nodes.some((node) => node.type === "start");
+  const hasEndNode = nodes.some((node) => node.type === "end");
+
   const onDragStart = (event: React.DragEvent, type: string) => {
     setDragData(type);
     event.dataTransfer.effectAllowed = "move";
@@ -103,30 +109,15 @@ const WorkflowSidebar: React.FC = () => {
           </SidebarGroupLabel>
 
           <SidebarGroupContent className="flex flex-col gap-2 mt-2">
-            {NODE_TYPES.map((node) => {
-              const Icon = node.icon;
-
-              return (
-                <Card
-                  key={node.type}
-                  draggable
-                  onDragStart={(e) => onDragStart(e, node.type)}
-                  className="cursor-grab active:cursor-grabbing hover:bg-sidebar-accent transition-colors py-3"
-                >
-                  <CardHeader className="flex items-center gap-3">
-                    <Icon className="size-5 text-muted-foreground" />
-                    <div>
-                      <CardTitle className="text-sm font-medium">
-                        {node.label}
-                      </CardTitle>
-                      <CardDescription className="text-xs text-muted-foreground">
-                        {node.description}
-                      </CardDescription>
-                    </div>
-                  </CardHeader>
-                </Card>
-              );
-            })}
+            {NODE_TYPES.map((node) => (
+              <DraggableNode
+                key={node.type}
+                hasStartNode={hasStartNode}
+                hasEndNode={hasEndNode}
+                node={node}
+                onDragStart={onDragStart}
+              />
+            ))}
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
@@ -134,6 +125,58 @@ const WorkflowSidebar: React.FC = () => {
         <ModeToggle />
       </SidebarFooter>
     </Sidebar>
+  );
+};
+
+const DraggableNode: React.FC<{
+  hasEndNode: boolean;
+  hasStartNode: boolean;
+  node: {
+    type: string;
+    label: string;
+    icon: any;
+    description: string;
+  };
+  onDragStart: (event: React.DragEvent, type: string) => void;
+}> = ({ hasStartNode, node, hasEndNode, onDragStart }) => {
+  const Icon = node.icon;
+
+  const draggable =
+    node.type !== "start"
+      ? node.type !== "end"
+        ? hasStartNode
+        : hasEndNode
+        ? false
+        : hasStartNode
+      : hasStartNode
+      ? false
+      : true;
+
+  return (
+    <Card
+      key={node.type}
+      draggable={draggable}
+      onDragStart={(e) => {
+        if (!draggable) return;
+        onDragStart(e, node.type);
+      }}
+      className={cn(
+        "select-none transition-colors py-3",
+        draggable
+          ? "opacity-100 cursor-grab active:cursor-grabbing hover:bg-sidebar-accent"
+          : "opacity-50 cursor-default"
+      )}
+    >
+      <CardHeader className="flex items-center gap-3">
+        <Icon className="size-5 text-muted-foreground" />
+        <div>
+          <CardTitle className="text-sm font-medium">{node.label}</CardTitle>
+          <CardDescription className="text-xs text-muted-foreground">
+            {node.description}
+          </CardDescription>
+        </div>
+      </CardHeader>
+    </Card>
   );
 };
 

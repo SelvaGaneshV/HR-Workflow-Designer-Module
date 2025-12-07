@@ -1,11 +1,13 @@
 import NodeFormPanel from "@/components/canvas/node-form-panel";
+import WorkflowControls from "@/components/canvas/workflow-controls";
+import WorkflowToolbar from "@/components/canvas/workflow-toolbar";
 import BasicEdge from "@/components/edges/basic-edge/basic-edge";
 import ApprovalNode from "@/components/nodes/approval-node/approval-node";
 import AutomatedStepNode from "@/components/nodes/automated-step-node/automated-step-node";
 import EndNode from "@/components/nodes/end-node/end-node";
 import StartNode from "@/components/nodes/start-node/start-node";
 import TaskNode from "@/components/nodes/task-node/task-node";
-import { useWorkflow } from "@/context/workflow-context";
+import { useWorkflow } from "@/hooks/use-workflow";
 import {
   addEdge,
   Background,
@@ -20,10 +22,8 @@ import {
   type Node,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { useCallback } from "react";
-import WorkflowToolbar from "./workflow-toolbar";
-import WorkflowControls from "./workflow-controls";
 import { useTheme } from "next-themes";
+import { useCallback } from "react";
 
 const NODE_TYPES = {
   start: StartNode,
@@ -127,11 +127,14 @@ const WorkflowCanvas: React.FC = () => {
         onPaneClick={() => {
           setSelectedNodeId(null);
         }}
+        style={{
+          backgroundColor: "transparent",
+        }}
         connectionLineType={ConnectionLineType.SmoothStep}
         edgeTypes={EDGE_TYPES}
         nodeTypes={NODE_TYPES}
       >
-        <Background color="#aaa" gap={16} />
+        <Background bgColor="transparent" color="#aaa" gap={16} />
         <NodeFormPanel />
         <WorkflowToolbar />
         <WorkflowControls />

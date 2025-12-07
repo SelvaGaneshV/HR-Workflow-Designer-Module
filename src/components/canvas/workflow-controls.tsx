@@ -1,4 +1,4 @@
-import { useWorkflow } from "@/context/workflow-context";
+import { useWorkflow } from "@/hooks/use-workflow";
 import { Controls, MiniMap } from "@xyflow/react";
 
 const WorkflowControls = () => {

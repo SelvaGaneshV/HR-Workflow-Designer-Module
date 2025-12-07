@@ -1,8 +1,7 @@
 import type { KeyValuePair } from "@/components/shared/key-value-input";
 import KeyValueInput from "@/components/shared/key-value-input";
 import NodeInput from "@/components/shared/node-input";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { useWorkflow } from "@/context/workflow-context";
+import { useWorkflow } from "@/hooks/use-workflow";
 import { useReactFlow } from "@xyflow/react";
 
 /**

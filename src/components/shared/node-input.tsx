@@ -1,9 +1,9 @@
+import { Checkbox } from "@/components/ui/checkbox";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import type { InputDeciderProps, NodeInputProps } from "@/types/node-form";
 import React from "react";
-import { Textarea } from "../ui/textarea";
-import { Checkbox } from "../ui/checkbox";
 
 const NodeInput: React.FC<NodeInputProps> = ({
   onChange,
@@ -53,10 +53,8 @@ const InputDecider: React.FC<InputDeciderProps> = ({
           onCheckedChange={(value) => {
             const err = validate?.(value);
             if (err) setError(err);
-            else {
-              onChange(value);
-              if (error) setError(null);
-            }
+            else if (error) setError(null);
+            onChange(value);
           }}
           disabled={disable}
         />
@@ -68,10 +66,8 @@ const InputDecider: React.FC<InputDeciderProps> = ({
           onChange={(e) => {
             const err = validate?.(e.target.value);
             if (err) setError(err);
-            else {
-              onChange(e.target.value);
-              if (error) setError(null);
-            }
+            else if (error) setError(null);
+            onChange(e.target.value);
           }}
           disabled={disable}
         />
@@ -89,10 +85,8 @@ const InputDecider: React.FC<InputDeciderProps> = ({
             else value = e.target.value;
             const err = validate?.(value);
             if (err) setError(err);
-            else {
-              onChange(value);
-              if (error) setError(null);
-            }
+            else if (error) setError(null);
+            onChange(value);
           }}
           disabled={disable}
         />

@@ -11,6 +11,7 @@ export function useSimulation(): UseSimulation {
     mutate: runSimulation,
     isPending: isSimulating,
   } = useMutation({
+    mutationKey: ["simulate"],
     mutationFn: async (workflowJson: WorkflowJson) => {
       const res: SimulationResult = await fetch("/api/simulate", {
         method: "POST",

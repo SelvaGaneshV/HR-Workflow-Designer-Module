@@ -4,13 +4,22 @@ import { Trash } from "lucide-react";
 import React from "react";
 
 /**
- * A basic toolbar for edges in the workflow canvas.
+ * BasicEdgeToolbar Component
  *
- * It contains a single button to delete the edge.
+ * Renders a toolbar for a React Flow edge, positioned using the provided
+ * coordinates. Includes controls such as deleting the edge.
  *
- * @param {string} id - The ID of the edge.
- * @param {number} x - The x-coordinate of the toolbar.
- * @param {number} y - The y-coordinate of the toolbar.
+ * @component
+ *
+ * @param {Object} props - Component props.
+ * @param {string} props.id - The unique ID of the edge this toolbar belongs to.
+ * @param {number} props.x - The x-coordinate where the toolbar should be positioned.
+ * @param {number} props.y - The y-coordinate where the toolbar should be positioned.
+ *
+ * @returns {React.JSX.Element} The rendered edge toolbar component.
+ *
+ * @example
+ * <BasicEdgeToolbar id="edge-1" x={120} y={80} />
  */
 const BasicEdgeToolbar: React.FC<{
   id: string;

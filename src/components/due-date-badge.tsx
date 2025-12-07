@@ -1,5 +1,5 @@
 import { cn, formatDateWithStatus, type DueStatus } from "@/lib/utils";
-import { Badge } from "./ui/badge";
+import { Badge } from "@/components/ui/badge";
 
 const dueBadgeClasses: Record<DueStatus, string> = {
   overdue: "bg-red-500/15 text-red-600 border-red-500/20",

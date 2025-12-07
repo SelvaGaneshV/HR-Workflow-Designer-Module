@@ -1,8 +1,9 @@
-import { useWorkflow } from "@/context/workflow-context";
+import { useWorkflow } from "@/hooks/use-workflow";
 import { Panel, useReactFlow, type Edge, type Node } from "@xyflow/react";
 import { Button } from "../ui/button";
 import WorkflowExportButton from "./workflow-export-button";
 import WorkflowImportButton from "./workflow-import-button";
+import { SidebarTrigger } from "../ui/sidebar";
 
 /**
  * A toolbar component for the workflow canvas that contains buttons for
@@ -28,13 +29,18 @@ const WorkflowToolbar: React.FC = () => {
     setNodes(data.nodes);
   };
   return (
-    <Panel position="bottom-center" className="flex gap-2">
-      <Button variant="outline" size={"sm"} onClick={openSandbox}>
-        Open Sandbox
-      </Button>
-      <WorkflowExportButton />
-      <WorkflowImportButton onImport={onImport} />
-    </Panel>
+    <>
+      <Panel position="top-left">
+        <SidebarTrigger size={"icon-lg"} variant={"secondary"} />
+      </Panel>
+      <Panel position="bottom-center" className="flex gap-2">
+        <Button variant="outline" size={"sm"} onClick={openSandbox}>
+          Open Sandbox
+        </Button>
+        <WorkflowExportButton />
+        <WorkflowImportButton onImport={onImport} />
+      </Panel>
+    </>
   );
 };
 

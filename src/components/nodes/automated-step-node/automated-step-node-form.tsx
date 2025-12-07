@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { InputGroupButton } from "@/components/ui/input-group";
 import { Separator } from "@/components/ui/separator";
-import { useWorkflow } from "@/context/workflow-context";
+import { useWorkflow } from "@/hooks/use-workflow";
 import { automatedStepActionsQueryOptions } from "@/query/nodes-query";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useReactFlow } from "@xyflow/react";

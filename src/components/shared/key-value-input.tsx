@@ -43,7 +43,34 @@ interface Props {
   value?: KeyValuePair[];
   onChange?: (value: KeyValuePair[]) => void;
 }
-
+/**
+ * KeyValueInput Component
+ *
+ * A dynamic key-value editor that supports multiple field types
+ * (`string`, `number`, `boolean`, `object`, `array`).
+ *
+ * Features:
+ * - Add or remove key/value rows
+ * - Auto-coerces value based on the selected type
+ * - Inline validation for key uniqueness, required fields, and JSON validity
+ * - Emits updated rows to the parent via `onChange`
+ *
+ * @component
+ *
+ * @param {Object} props - Component props.
+ * @param {KeyValuePair[]} [props.value=[]] - Initial list of key-value rows.
+ * @param {(rows: KeyValuePair[]) => void} [props.onChange] - Callback triggered whenever rows are updated.
+ *
+ * @returns {JSX.Element} The rendered key-value input UI.
+ *
+ * @example
+ * const [data, setData] = useState([]);
+ *
+ * <KeyValueInput
+ *   value={data}
+ *   onChange={(updated) => setData(updated)}
+ * />
+ */
 const KeyValueInput: React.FC<Props> = ({ value = [], onChange }) => {
   const [rows, setRows] = useState<KeyValuePair[]>(value);
 
@@ -135,6 +162,61 @@ const KeyValueInput: React.FC<Props> = ({ value = [], onChange }) => {
   );
 };
 
+
+/**
+ * KeyValueInputItems Component
+ *
+ * Renders a single editable row inside the KeyValueInput component.
+ * Each row contains:
+ * - A key field (with duplicate + empty validation)
+ * - A type selector (string, number, boolean, object, array)
+ * - A value field that dynamically changes input type based on selected type
+ * - A remove button to delete the row
+ *
+ * Dynamic Behavior:
+ * - For `"boolean"` → uses a Select dropdown
+ * - For `"object"` and `"array"` → uses a Textarea with JSON validation
+ * - For `"string"` and `"number"` → standard Input field
+ *
+ * Validation:
+ * - `haskeyError()` is called on every key change:
+ *    - Ensures the key is not empty
+ *    - Ensures the key is unique among rows
+ *
+ * - `hasValueError()` is called on value changes:
+ *    - Ensures valid JSON for object/array types
+ *    - Ensures array parses into an actual array
+ *
+ * Auto-coercion:
+ * - Value handling is delegated to `updateField`, which may transform
+ *   values depending on the type (e.g., boolean → true/false)
+ *
+ * @component
+ *
+ * @param {Object} props - Component props.
+ * @param {number} props.i - Index of the row being edited.
+ * @param {KeyValuePair} props.row - Current key-value row data.
+ * @param {(i: number, field: keyof KeyValuePair, val: any) => void} props.updateField
+ *        Updates a specific field (`key`, `value`, or `type`) for the row.
+ * @param {(i: number) => void} props.removeRow
+ *        Removes the row at index `i`.
+ * @param {(key: string, index: number) => string | null} props.haskeyError
+ *        Validation function for key names.
+ * @param {(value: any, type: KVType) => string | null} props.hasValueError
+ *        Validation function for value inputs based on type.
+ *
+ * @returns {JSX.Element} The rendered key-value editor row.
+ *
+ * @example
+ * <KeyValueInputItems
+ *   i={0}
+ *   row={{ key: "age", value: 25, type: "number" }}
+ *   updateField={updateField}
+ *   removeRow={removeRow}
+ *   haskeyError={haskeyError}
+ *   hasValueError={hasValueError}
+ * />
+ */
 const KeyValueInputItems: React.FC<{
   i: number;
   row: KeyValuePair;

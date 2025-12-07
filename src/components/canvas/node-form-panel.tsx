@@ -3,10 +3,10 @@ import AutomatedStepNodeForm from "@/components/nodes/automated-step-node/automa
 import EndNodeForm from "@/components/nodes/end-node/end-node-form";
 import StarNodeForm from "@/components/nodes/start-node/start-node-form";
 import TaskNodeForm from "@/components/nodes/task-node/task-node-form";
-import { useWorkflow } from "@/context/workflow-context";
-import { Panel, useNodesData, useReactFlow } from "@xyflow/react";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { useWorkflow } from "@/hooks/use-workflow";
+import { Panel } from "@xyflow/react";
 import type React from "react";
-import { ScrollArea } from "../ui/scroll-area";
 
 /**
  * A panel that displays a form for the currently selected node.
@@ -36,7 +36,7 @@ const NodeFormPanel: React.FC = () => {
         </span>
       </div>
       <div className="flex-1 min-h-0 w-full overflow-hidden ">
-        <ScrollArea className="w-full h-full p-3" >
+        <ScrollArea className="w-full h-full p-3">
           <RenderForm
             key={selectedNode.id + "-form"}
             type={selectedNode?.type}
