@@ -10,10 +10,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { InputGroupButton } from "@/components/ui/input-group";
 import { Separator } from "@/components/ui/separator";
-import { useWorkflow } from "@/hooks/use-workflow";
+import useNodeForm from "@/hooks/use-node-form";
 import { automatedStepActionsQueryOptions } from "@/query/nodes-query";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { useReactFlow } from "@xyflow/react";
 import { ChevronDownIcon } from "lucide-react";
 import React from "react";
 
@@ -29,11 +28,9 @@ type AutomationResponse = {
  * @returns A JSX element representing the AutomatedStepNode form.
  */
 const AutomatedStepNodeForm = () => {
-  const { updateNodeData } = useReactFlow();
-  const { selectedNode } = useWorkflow();
-
+  const { selectedNode, updateNodeData } = useNodeForm();
   const onNodeDataChange = (data: any) => {
-    updateNodeData(selectedNode!.id, data);
+    updateNodeData(data);
   };
   const onChangeKeyValue = (value: KeyValuePair[]) => {
     onNodeDataChange({ customFields: value });
@@ -62,7 +59,7 @@ const AutomatedStepNodeForm = () => {
 const AutomationsActions: React.FC<{
   onChange: (value: any) => void;
 }> = ({ onChange }) => {
-  const { selectedNode } = useWorkflow();
+  const { selectedNode } = useNodeForm();
   const [action, setAction] = React.useState<string | undefined>(
     selectedNode?.data?.action as string | undefined
   );

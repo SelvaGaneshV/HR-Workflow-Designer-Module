@@ -29,8 +29,6 @@ type WorkflowContextType = UseSimulation & {
   logs: Logs[] | null;
   dragData: string | null;
   setDragData: React.Dispatch<React.SetStateAction<string | null>>;
-  selectedNode: Pick<Node, "id" | "type" | "data"> | null;
-  setSelectedNodeId: React.Dispatch<React.SetStateAction<string | null>>;
   isSandboxOpen: boolean;
   openSandbox: () => void;
   closeSandbox: () => void;

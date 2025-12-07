@@ -2,14 +2,12 @@ import KeyValueInput, {
   type KeyValuePair,
 } from "@/components/shared/key-value-input";
 import NodeInput from "@/components/shared/node-input";
-import { useWorkflow } from "@/hooks/use-workflow";
-import { useReactFlow } from "@xyflow/react";
+import useNodeForm from "@/hooks/use-node-form";
 
 const StarNodeForm = () => {
-  const { updateNodeData } = useReactFlow();
-  const { selectedNode } = useWorkflow();
+  const { selectedNode, updateNodeData } = useNodeForm();
   const onNodeDataChange = (data: any) => {
-    updateNodeData(selectedNode!.id, data);
+    updateNodeData(data);
   };
   const onChangeKeyValue = (value: KeyValuePair[]) => {
     onNodeDataChange({ customFields: value });

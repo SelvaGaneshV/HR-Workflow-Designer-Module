@@ -2,6 +2,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import useNodeForm from "@/hooks/use-node-form";
 import type { InputDeciderProps, NodeInputProps } from "@/types/node-form";
 import React from "react";
 
@@ -15,10 +16,11 @@ const NodeInput: React.FC<NodeInputProps> = ({
   orientation = "vertical",
 }) => {
   const id = React.useId();
+  const { addError, removeError } = useNodeForm();
   const [error, setError] = React.useState<string | null | undefined>(null);
 
   return (
-    <Field id={id} orientation={orientation}>
+    <Field id={id} orientation={orientation} data-invalid={!!error}>
       <FieldLabel>{label}</FieldLabel>
       <InputDecider
         key={id + "-InputDecider"}
@@ -27,7 +29,11 @@ const NodeInput: React.FC<NodeInputProps> = ({
         type={type}
         validate={validate}
         error={error}
-        setError={(error) => setError(error)}
+        setError={(error) => {
+          if (!error) removeError(id);
+          else addError(id);
+          setError(error);
+        }}
         disable={disable}
       />
       <FieldError>{error}</FieldError>
@@ -57,6 +63,7 @@ const InputDecider: React.FC<InputDeciderProps> = ({
             onChange(value);
           }}
           disabled={disable}
+          aria-invalid={!!error}
         />
       );
     case "textarea":
@@ -70,6 +77,7 @@ const InputDecider: React.FC<InputDeciderProps> = ({
             onChange(e.target.value);
           }}
           disabled={disable}
+          aria-invalid={!!error}
         />
       );
     default:
@@ -89,6 +97,7 @@ const InputDecider: React.FC<InputDeciderProps> = ({
             onChange(value);
           }}
           disabled={disable}
+          aria-invalid={!!error}
         />
       );
   }

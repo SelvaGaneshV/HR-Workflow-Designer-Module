@@ -11,9 +11,7 @@ export const WorkflowProvider: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
   const [dragData, setDragData] = React.useState<string | null>(null);
-  const [selectedNodeId, setSelectedNodeId] = React.useState<string | null>(
-    null
-  );
+
   const [isSandboxOpen, setIsSandboxOpen] = React.useState(false);
   const [selectedFlow, setSelectedFlow] = React.useState<null | Selectedflow>(
     null
@@ -21,7 +19,6 @@ export const WorkflowProvider: React.FC<React.PropsWithChildren> = ({
 
   const { runSimulation, simulation, isSimulating } = useSimulation();
 
-  const selectedNode = useNodesData(selectedNodeId!);
 
   const openSandbox = () => setIsSandboxOpen(true);
 
@@ -48,8 +45,6 @@ export const WorkflowProvider: React.FC<React.PropsWithChildren> = ({
       value={{
         dragData,
         setDragData,
-        selectedNode,
-        setSelectedNodeId,
         isSandboxOpen,
         openSandbox,
         closeSandbox,

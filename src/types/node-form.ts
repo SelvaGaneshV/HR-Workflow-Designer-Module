@@ -1,6 +1,11 @@
+import type { Node } from "@xyflow/react";
 import type React from "react";
 
-type NodeInputType = React.HTMLInputTypeAttribute | "dropdown" | "checkbox" | "textarea"  ;
+type NodeInputType =
+  | React.HTMLInputTypeAttribute
+  | "dropdown"
+  | "checkbox"
+  | "textarea";
 type NodeInputProps = {
   label: string;
   value: any;
@@ -15,4 +20,21 @@ type InputDeciderProps = Omit<NodeInputProps, "label"> & {
   setError: (value: string | null | undefined) => void;
 };
 
-export type { NodeInputProps, NodeInputType, InputDeciderProps };
+type NodeFormContextProps = {
+  selectedNodeId: string | null;
+  selectedNode: Node | null;
+  onOpenNodeForm: (node: Node | null) => void;
+  onSubmit: () => void;
+  addError: (error: string) => void;
+  errors: Set<string>;
+  removeError: (error: string) => void;
+  updateNodeData: (data: Record<string, any>) => void;
+  resetForm: () => void;
+};
+
+export type {
+  NodeInputProps,
+  NodeInputType,
+  InputDeciderProps,
+  NodeFormContextProps,
+};

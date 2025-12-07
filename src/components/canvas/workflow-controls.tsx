@@ -1,13 +1,13 @@
-import { useWorkflow } from "@/hooks/use-workflow";
+import useNodeForm from "@/hooks/use-node-form";
 import { Controls, MiniMap } from "@xyflow/react";
 
 const WorkflowControls = () => {
-  const { selectedNode } = useWorkflow();
+  const { selectedNodeId } = useNodeForm();
 
   return (
     <>
       <Controls />
-      {!selectedNode && (
+      {!selectedNodeId && (
         <MiniMap
           bgColor="var(--background)"
           nodeColor="var(--accent)"

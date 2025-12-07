@@ -28,6 +28,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import useNodeForm from "@/hooks/use-node-form";
 import { ChevronDownIcon, Plus, Trash2 } from "lucide-react";
 import React, { useState } from "react";
 
@@ -119,7 +120,7 @@ const KeyValueInput: React.FC<Props> = ({ value = [], onChange }) => {
 
   const haskeyError = (key: string, index: number) => {
     if (!key.trim()) return "Required";
-    if (rows.filter((r) => r.key === key).length > 1) return "Duplicate";
+    if (rows.filter((r) => r.key === key).length > 0) return "Duplicate";
     return null;
   };
   const hasValueError = (value: any, type: KVType) => {
@@ -161,7 +162,6 @@ const KeyValueInput: React.FC<Props> = ({ value = [], onChange }) => {
     </div>
   );
 };
-
 
 /**
  * KeyValueInputItems Component
@@ -225,13 +225,15 @@ const KeyValueInputItems: React.FC<{
   haskeyError: (key: string, index: number) => string | null;
   hasValueError: (value: any, type: KVType) => string | null;
 }> = ({ i, row, haskeyError, hasValueError, updateField, removeRow }) => {
-  const [keyError, setKeyError] = useState<string | null>(null);
-  const [valueError, setValueError] = useState<string | null>(null);
+  const { addError, removeError } = useNodeForm();
+  const id = React.useId();
+  const [keyError, setKeyError] = React.useState<string | null>(null);
+  const [valueError, setValueError] = React.useState<string | null>(null);
 
   return (
     <FieldGroup className="bg-background p-3 rounded-md shadow-2xs gap-2.5">
       <FieldSet className="">
-        <Field orientation={"vertical"}>
+        <Field orientation={"vertical"} data-invalid={!!keyError}>
           <FieldLabel>Key</FieldLabel>
           <InputGroup>
             <InputGroupInput
@@ -240,10 +242,16 @@ const KeyValueInputItems: React.FC<{
               onChange={(e) => {
                 const key = e.target.value;
                 const error = haskeyError(key, i);
-                if (error) setKeyError(error);
-                else setKeyError(null);
+                if (error) {
+                  addError(id + "-key");
+                  setKeyError(error);
+                } else {
+                  removeError(id + "-key");
+                  setKeyError(null);
+                }
                 updateField(i, "key", e.target.value);
               }}
+              aria-invalid={!!keyError}
             />
 
             <InputGroupAddon align="inline-end">
@@ -285,7 +293,11 @@ const KeyValueInputItems: React.FC<{
               <InputGroupButton
                 variant="ghost"
                 size="icon-sm"
-                onClick={() => removeRow(i)}
+                onClick={() => {
+                  removeError(id + "-key");
+                  removeError(id + "-value");
+                  removeRow(i);
+                }}
               >
                 <Trash2 className="w-4 h-4 text-red-500" />
               </InputGroupButton>
@@ -295,20 +307,26 @@ const KeyValueInputItems: React.FC<{
         </Field>
       </FieldSet>
       <FieldSet>
-        <Field orientation={"vertical"}>
+        <Field orientation={"vertical"} data-invalid={!!valueError}>
           <FieldLabel>Value</FieldLabel>
           {row.type === "boolean" ? (
             <Select
               value={String(row.value)}
               onValueChange={(v) => {
                 const error = hasValueError(v === "true", row.type);
-                if (error) setValueError(error);
-                else setValueError(null);
+                if (error) {
+                  addError(id + "-value");
+                  setValueError(error);
+                } else {
+                  removeError(id + "-value");
+                  setValueError(null);
+                }
                 updateField(i, "value", v === "true");
               }}
+              aria-invalid={!!valueError}
             >
               <SelectTrigger>
-                <SelectValue />
+                <SelectValue aria-invalid={!!valueError} />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="true">true</SelectItem>
@@ -320,11 +338,17 @@ const KeyValueInputItems: React.FC<{
               value={row.value}
               onChange={(e) => {
                 const error = hasValueError(e.target.value, row.type);
-                if (error) setValueError(error);
-                else setValueError(null);
+                if (error) {
+                  addError(id + "-value");
+                  setValueError(error);
+                } else {
+                  removeError(id + "-value");
+                  setValueError(null);
+                }
                 updateField(i, "value", e.target.value);
               }}
               className="text-xs text-muted-foreground mt-2"
+              aria-invalid={!!valueError}
             />
           ) : (
             <Input
@@ -333,10 +357,16 @@ const KeyValueInputItems: React.FC<{
               placeholder="value"
               onChange={(e) => {
                 const error = hasValueError(e.target.value, row.type);
-                if (error) setValueError(error);
-                else setValueError(null);
+                if (error) {
+                  addError(id + "-value");
+                  setValueError(error);
+                } else {
+                  removeError(id + "-value");
+                  setValueError(null);
+                }
                 updateField(i, "value", e.target.value);
               }}
+              aria-invalid={!!valueError}
             />
           )}
           <FieldError>{valueError}</FieldError>

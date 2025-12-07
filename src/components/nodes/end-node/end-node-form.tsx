@@ -1,6 +1,7 @@
 import type { KeyValuePair } from "@/components/shared/key-value-input";
 import KeyValueInput from "@/components/shared/key-value-input";
 import NodeInput from "@/components/shared/node-input";
+import useNodeForm from "@/hooks/use-node-form";
 import { useWorkflow } from "@/hooks/use-workflow";
 import { useReactFlow } from "@xyflow/react";
 
@@ -11,10 +12,9 @@ import { useReactFlow } from "@xyflow/react";
  * @returns A JSX element representing the EndNode form.
  */
 const EndNodeForm = () => {
-  const { updateNodeData } = useReactFlow();
-  const { selectedNode } = useWorkflow();
+  const { selectedNode, updateNodeData } = useNodeForm();
   const onNodeDataChange = (data: any) => {
-    updateNodeData(selectedNode!.id, data);
+    updateNodeData(data);
   };
   const onChangeKeyValue = (value: KeyValuePair[]) => {
     onNodeDataChange({ customFields: value });

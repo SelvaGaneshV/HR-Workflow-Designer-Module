@@ -4,9 +4,11 @@ import EndNodeForm from "@/components/nodes/end-node/end-node-form";
 import StarNodeForm from "@/components/nodes/start-node/start-node-form";
 import TaskNodeForm from "@/components/nodes/task-node/task-node-form";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useWorkflow } from "@/hooks/use-workflow";
-import { Panel } from "@xyflow/react";
+import useNodeForm from "@/hooks/use-node-form";
+import { Panel, useNodesData } from "@xyflow/react";
 import type React from "react";
+import { Button } from "../ui/button";
+import { Save } from "lucide-react";
 
 /**
  * A panel that displays a form for the currently selected node.
@@ -15,9 +17,9 @@ import type React from "react";
  * @returns A panel with a form for the selected node.
  */
 const NodeFormPanel: React.FC = () => {
-  const { selectedNode } = useWorkflow();
-
-  if (!selectedNode) {
+  const { selectedNode, selectedNodeId, errors, onSubmit } = useNodeForm();
+  const node = useNodesData(selectedNodeId!);
+  if (!selectedNode || !node) {
     return null;
   }
 
@@ -26,14 +28,22 @@ const NodeFormPanel: React.FC = () => {
       position="top-right"
       className="bg-sidebar flex flex-col items-center justify-start h-[97%] w-xs rounded-md border border-sidebar-border"
     >
-      <div className="flex w-full h-12 items-center justify-start border-b border-sidebar-border px-3 py-2">
+      <div className="flex w-full h-12 items-center justify-between border-b gap-1 border-sidebar-border px-3 py-2">
         <span className="text-xl font-medium text-start truncate capitalize text-muted-foreground">
           {
-            (selectedNode?.data?.title
-              ? selectedNode?.data?.title
+            (node?.data?.title
+              ? node?.data?.title
               : selectedNode?.type) as React.ReactNode
           }
         </span>
+        <Button
+          variant={"outline"}
+          onClick={onSubmit}
+          disabled={errors.size > 0}
+          size="icon-sm"
+        >
+          <Save />
+        </Button>
       </div>
       <div className="flex-1 min-h-0 w-full overflow-hidden ">
         <ScrollArea className="w-full h-full p-3">

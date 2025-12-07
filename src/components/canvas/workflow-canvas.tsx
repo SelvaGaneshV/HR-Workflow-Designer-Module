@@ -7,6 +7,7 @@ import AutomatedStepNode from "@/components/nodes/automated-step-node/automated-
 import EndNode from "@/components/nodes/end-node/end-node";
 import StartNode from "@/components/nodes/start-node/start-node";
 import TaskNode from "@/components/nodes/task-node/task-node";
+import useNodeForm from "@/hooks/use-node-form";
 import { useWorkflow } from "@/hooks/use-workflow";
 import {
   addEdge,
@@ -51,7 +52,8 @@ const WorkflowCanvas: React.FC = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const { screenToFlowPosition, getEdges, getNodes } = useReactFlow();
-  const { dragData, setDragData, setSelectedNodeId } = useWorkflow();
+  const { dragData, setDragData } = useWorkflow();
+  const { resetForm } = useNodeForm();
 
   const onConnect = useCallback(
     (params: Connection) => setEdges((eds) => addEdge(params, eds)),
@@ -125,7 +127,7 @@ const WorkflowCanvas: React.FC = () => {
         isValidConnection={isValidConnection}
         onEdgesChange={onEdgesChange}
         onPaneClick={() => {
-          setSelectedNodeId(null);
+          resetForm();
         }}
         style={{
           backgroundColor: "transparent",
