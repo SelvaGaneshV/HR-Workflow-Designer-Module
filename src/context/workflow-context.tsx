@@ -1,6 +1,5 @@
 import { useSimulation } from "@/hooks/use-simulation";
 import type { Selectedflow, WorkflowContextType } from "@/types/workflow";
-import { useNodesData } from "@xyflow/react";
 import React from "react";
 
 export const WorkflowContext = React.createContext<WorkflowContextType | null>(
@@ -18,7 +17,6 @@ export const WorkflowProvider: React.FC<React.PropsWithChildren> = ({
   );
 
   const { runSimulation, simulation, isSimulating } = useSimulation();
-
 
   const openSandbox = () => setIsSandboxOpen(true);
 

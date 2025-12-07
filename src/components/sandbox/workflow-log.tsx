@@ -32,7 +32,7 @@ const WorkflowLog: React.FC<{ log: Logs; i: number }> = ({ log, i }) => {
   const Icon = getIcon(log.type);
 
   return (
-    <div key={i} className="flex gap-2 items-start justify-center    text-sm">
+    <div key={i} className="flex gap-2 items-start justify-center pb-2   text-sm">
       <span className="text-xs text-muted-foreground w-4">{i + 1}.</span>
       <Icon className={cn("size-4", getIconColor(log.type))} />
       <Button

@@ -1,9 +1,9 @@
+import WorkflowExportButton from "@/components/canvas/workflow-export-button";
+import WorkflowImportButton from "@/components/canvas/workflow-import-button";
+import { Button } from "@/components/ui/button";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useWorkflow } from "@/hooks/use-workflow";
 import { Panel, useReactFlow, type Edge, type Node } from "@xyflow/react";
-import { Button } from "../ui/button";
-import WorkflowExportButton from "./workflow-export-button";
-import WorkflowImportButton from "./workflow-import-button";
-import { SidebarTrigger } from "../ui/sidebar";
 
 /**
  * A toolbar component for the workflow canvas that contains buttons for

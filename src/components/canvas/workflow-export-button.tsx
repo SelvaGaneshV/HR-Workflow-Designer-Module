@@ -8,7 +8,7 @@ const WorkflowExportButton = () => {
   return (
     <Button
       size="icon-sm"
-      title="Download Workflow"
+      title="Export Workflow"
       variant="secondary"
       onClick={() => downloadWorkflow(toObject())}
     >

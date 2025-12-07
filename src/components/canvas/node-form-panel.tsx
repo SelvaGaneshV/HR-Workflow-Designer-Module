@@ -3,12 +3,12 @@ import AutomatedStepNodeForm from "@/components/nodes/automated-step-node/automa
 import EndNodeForm from "@/components/nodes/end-node/end-node-form";
 import StarNodeForm from "@/components/nodes/start-node/start-node-form";
 import TaskNodeForm from "@/components/nodes/task-node/task-node-form";
+import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import useNodeForm from "@/hooks/use-node-form";
 import { Panel, useNodesData } from "@xyflow/react";
-import type React from "react";
-import { Button } from "../ui/button";
 import { Save } from "lucide-react";
+import type React from "react";
 
 /**
  * A panel that displays a form for the currently selected node.
